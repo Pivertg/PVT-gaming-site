@@ -7,6 +7,10 @@ document.addEventListener("DOMContentLoaded", function () {
         roster1: ["#2U9U8UOOP", "playerID2", "playerID3"], // 3 joueurs dans le roster 1
         roster2: ["playerID4", "playerID5", "playerID6"], // 3 joueurs dans le roster 2
         roster3: ["playerID7", "playerID8", "playerID9"], // 3 joueurs dans le roster 3
+        roster4: ["playerID7", "playerID8", "playerID9"], // 3 joueurs dans le roster 4
+        roster5: ["playerID7", "playerID8", "playerID9"], // 3 joueurs dans le roster 5
+        roster6: ["playerID7", "playerID8", "playerID9"], // 3 joueurs dans le roster 6
+        roster7: ["playerID7", "playerID8", "playerID9"], // 3 joueurs dans le roster 7
         // Ajouter d'autres rosters si nécessaire
     };
 
