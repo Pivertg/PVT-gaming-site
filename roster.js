@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Liste des rosters avec leurs 3 IDs Brawl Stars (remplace par les vrais IDs)
     const rosters = {
-        roster1: ["playerID1", "playerID2", "playerID3"], // 3 joueurs dans le roster 1
+        roster1: ["#2U9U8UOOP", "playerID2", "playerID3"], // 3 joueurs dans le roster 1
         roster2: ["playerID4", "playerID5", "playerID6"], // 3 joueurs dans le roster 2
         roster3: ["playerID7", "playerID8", "playerID9"], // 3 joueurs dans le roster 3
         // Ajouter d'autres rosters si nécessaire
