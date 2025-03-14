@@ -1,6 +1,6 @@
 // Fonction pour récupérer les informations du joueur via l'API Brawl Stars
 async function getPlayerInfo(playerTag) {
-    const API_KEY = "TON_CLE_API_ICI";  // Remplace par ta clé API
+    const API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImJjMjMzMjU4LTRkMWQtNDg0MC1hNzI4LTYxMGQxM2U4MDJiZSIsImlhdCI6MTc0MTYxMTI4MSwic3ViIjoiZGV2ZWxvcGVyL2NhMmI0N2FjLTFhZmItY2M4MS1lMzg5LWUzYTZlMDExMmYwNyIsInNjb3BlcyI6WyJicmF3bHN0YXJzIl0sImxpbWl0cyI6W3sidGllciI6ImRldmVsb3Blci9zaWx2ZXIiLCJ0eXBlIjoidGhyb3R0bGluZyJ9LHsiY2lkcnMiOlsiMTk0LjI1NC42Mi41NCJdLCJ0eXBlIjoiY2xpZW50In1dfQ.b52Dp0owyVdCgvLjxn-UVkjC6KrHBVKO4rEPAUGFlpzNLmdU4UbaZ1AbQsq3YpVCC8GE_9uDsMA6fJLbQzq5gA";  // Remplace par ta clé API
     const url = `https://api.brawlstars.com/v1/players/%23${playerTag.replace("#", "")}`;
 
     const response = await fetch(url, {
