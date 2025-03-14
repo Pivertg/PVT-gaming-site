@@ -2,14 +2,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const rosterSelect = document.getElementById("roster-select");
     const rosterDetails = document.getElementById("roster-details");
 
-    // Liste des IDs Brawl Stars à récupérer (manuellement remplis dans le code)
-    const playerIDs = ["player1ID", "player2ID", "player3ID"];  // Remplir avec les IDs des joueurs que tu veux
+    // Liste des rosters avec leurs IDs Brawl Stars
+    const rosters = {
+        roster1: ["playerID1", "playerID2"], // Remplacer par les vrais IDs
+        roster2: ["playerID3", "playerID4"],
+        roster3: ["playerID5", "playerID6"],
+        roster4: ["playerID7", "playerID8"],
+        roster5: ["playerID9", "playerID10"],
+        // Ajouter plus de rosters si nécessaire
+    };
 
-    // API Key Brawl Stars (tu dois obtenir ta propre clé API)
-    const API_KEY = "VOTRE_CLE_API"; // Remplace par ta clé API Brawl Stars
-
-    // Stockage des informations des joueurs
-    const playerDataStorage = [];
+    // API Key Brawl Stars (remplacer par ta propre clé)
+    const API_KEY = "VOTRE_CLE_API"; // Remplace par ta clé API
 
     // Fonction pour récupérer les informations du joueur depuis l'API
     async function fetchPlayerData(playerId) {
@@ -32,14 +36,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Fonction pour remplir le tableau avec les informations des joueurs
-    function displayPlayers() {
-        if (playerDataStorage.length === 0) {
-            rosterDetails.innerHTML = "<p>Aucune information disponible.</p>";
+    // Fonction pour afficher les joueurs d'un roster
+    async function displayRoster(rosterKey) {
+        const selectedRoster = rosters[rosterKey];
+
+        if (!selectedRoster || selectedRoster.length === 0) {
+            rosterDetails.innerHTML = "<p>Aucun joueur inscrit dans ce roster.</p>";
             return;
         }
 
         let tableHTML = `
+            <h2>${rosterKey.replace("roster", "Roster ")}</h2>
             <table class="roster-table">
                 <thead>
                     <tr>
@@ -52,42 +59,34 @@ document.addEventListener("DOMContentLoaded", function () {
                 </thead>
                 <tbody>`;
 
-        playerDataStorage.forEach(player => {
-            tableHTML += `
-                <tr>
-                    <td>${player.name}</td>
-                    <td>${player.trophies}</td>
-                    <td>${player.expLevel}</td>
-                    <td>${player.victories3v3}</td>
-                    <td>${player.rankPoints}</td>
-                </tr>`;
-        });
+        // Récupérer les informations pour chaque joueur du roster
+        for (const playerId of selectedRoster) {
+            const playerData = await fetchPlayerData(playerId);
+
+            if (playerData) {
+                const { name, trophies, expLevel, victories3v3, rankPoints } = playerData;
+                tableHTML += `
+                    <tr>
+                        <td>${name}</td>
+                        <td>${trophies}</td>
+                        <td>${expLevel}</td>
+                        <td>${victories3v3}</td>
+                        <td>${rankPoints}</td>
+                    </tr>`;
+            }
+        }
 
         tableHTML += `</tbody></table>`;
         rosterDetails.innerHTML = tableHTML;
     }
 
-    // Appel API pour récupérer les données des joueurs
-    async function loadPlayerData() {
-        for (const playerId of playerIDs) {
-            const playerData = await fetchPlayerData(playerId);
-
-            if (playerData) {
-                const { name, trophies, expLevel, victories3v3, rankPoints } = playerData;
-                playerDataStorage.push({
-                    name,
-                    trophies,
-                    expLevel,
-                    victories3v3,
-                    rankPoints
-                });
-            }
+    // Écouter le changement de sélection dans le menu déroulant
+    rosterSelect.addEventListener("change", function () {
+        const selectedRoster = this.value;
+        if (selectedRoster) {
+            displayRoster(selectedRoster);
+        } else {
+            rosterDetails.innerHTML = "<p>Sélectionnez un roster pour voir les détails.</p>";
         }
-
-        // Une fois toutes les données récupérées, affiche les joueurs
-        displayPlayers();
-    }
-
-    // Lancer la récupération des données dès le chargement du site
-    loadPlayerData();
+    });
 });
