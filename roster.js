@@ -1,32 +1,44 @@
-// Fonction pour récupérer les informations du joueur via l'API Brawl Stars
-async function getPlayerInfo(playerTag) {
-    const API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImJjMjMzMjU4LTRkMWQtNDg0MC1hNzI4LTYxMGQxM2U4MDJiZSIsImlhdCI6MTc0MTYxMTI4MSwic3ViIjoiZGV2ZWxvcGVyL2NhMmI0N2FjLTFhZmItY2M4MS1lMzg5LWUzYTZlMDExMmYwNyIsInNjb3BlcyI6WyJicmF3bHN0YXJzIl0sImxpbWl0cyI6W3sidGllciI6ImRldmVsb3Blci9zaWx2ZXIiLCJ0eXBlIjoidGhyb3R0bGluZyJ9LHsiY2lkcnMiOlsiMTk0LjI1NC42Mi41NCJdLCJ0eXBlIjoiY2xpZW50In1dfQ.b52Dp0owyVdCgvLjxn-UVkjC6KrHBVKO4rEPAUGFlpzNLmdU4UbaZ1AbQsq3YpVCC8GE_9uDsMA6fJLbQzq5gA";  // Remplace par ta clé API
-    const url = `https://api.brawlstars.com/v1/players/%23${playerTag.replace("#", "")}`;
-
-    const response = await fetch(url, {
-        method: "GET",
-        headers: {
-            "Authorization": `Bearer ${API_KEY}`,
-            "Accept": "application/json"
-        }
-    });
-
-    if (!response.ok) {
-        console.error("Erreur API:", response.status);
-        return null;
-    }
-
-    return await response.json();
-}
-
 document.addEventListener("DOMContentLoaded", function () {
     const rosterSelect = document.getElementById("roster-select");
     const rosterDetails = document.getElementById("roster-details");
 
-    // Charger les joueurs inscrits depuis le stockage local
-    const savedRosters = JSON.parse(localStorage.getItem("rosters")) || {};
+    // Données manuelles pour les joueurs dans les rosters
+    const savedRosters = {
+        roster1: [
+            {
+                pseudo: "Player1",
+                id: "player1ID", // L'ID Brawl Stars ici
+                image: "https://example.com/avatar1.jpg", // Lien vers l'image du joueur
+                trophies: 1200, // Trophées du joueur
+                wins3v3: 45, // Victoires en 3v3
+                rankPoints: 1200 // Points de classement
+            },
+            {
+                pseudo: "Player2",
+                id: "player2ID",
+                image: "https://example.com/avatar2.jpg",
+                trophies: 1500,
+                wins3v3: 30,
+                rankPoints: 1000
+            }
+        ],
+        roster2: [
+            {
+                pseudo: "Player3",
+                id: "player3ID",
+                image: "https://example.com/avatar3.jpg",
+                trophies: 1000,
+                wins3v3: 20,
+                rankPoints: 800
+            }
+        ]
+    };
 
-    async function displayRoster(rosterKey) {
+    // Sauvegarde manuelle dans le localStorage
+    localStorage.setItem("rosters", JSON.stringify(savedRosters));
+
+    // Fonction pour afficher les joueurs du roster sélectionné
+    function displayRoster(rosterKey) {
         if (!savedRosters[rosterKey] || savedRosters[rosterKey].length === 0) {
             rosterDetails.innerHTML = "<p>Aucun joueur inscrit dans ce roster.</p>";
             return;
@@ -42,31 +54,38 @@ document.addEventListener("DOMContentLoaded", function () {
                         <th>ID Brawl Stars</th>
                         <th>Trophées</th>
                         <th>Victoires 3v3</th>
-                        <th>Points de Classement</th> <!-- Nouvelle colonne -->
+                        <th>Points de Classement</th>
                     </tr>
                 </thead>
                 <tbody>`;
 
-        // Boucle pour chaque joueur et récupérer les infos via l'API
-        for (const player of savedRosters[rosterKey]) {
-            const playerInfo = await getPlayerInfo(player.id);  // Récupérer les infos via l'API
-
+        // Remplir le tableau avec les informations des joueurs
+        savedRosters[rosterKey].forEach(player => {
             tableHTML += `
                 <tr>
                     <td><img src="${player.image}" alt="Avatar" class="player-img"></td>
                     <td>${player.pseudo}</td>
                     <td>${player.id}</td>
-                    <td>${playerInfo ? playerInfo.trophies : "N/A"}</td>
-                    <td>${playerInfo ? playerInfo["3vs3Victories"] : "N/A"}</td>
-                    <td>${playerInfo ? playerInfo.rankPoints : "N/A"}</td> <!-- Points de classement -->
+                    <td>${player.trophies}</td>
+                    <td>${player.wins3v3}</td>
+                    <td>${player.rankPoints}</td>
                 </tr>`;
-        }
+        });
 
         tableHTML += `</tbody></table>`;
         rosterDetails.innerHTML = tableHTML;
     }
 
+    // Écouteur d'événements pour la sélection du roster
     rosterSelect.addEventListener("change", function () {
         displayRoster(this.value);
+    });
+
+    // Remplir le menu avec les rosters disponibles
+    Object.keys(savedRosters).forEach(rosterKey => {
+        const option = document.createElement("option");
+        option.value = rosterKey;
+        option.textContent = rosterKey.replace("roster", "Roster ");
+        rosterSelect.appendChild(option);
     });
 });
