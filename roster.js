@@ -2,14 +2,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const rosterSelect = document.getElementById("roster-select");
     const rosterDetails = document.getElementById("roster-details");
 
-    // Liste des rosters avec leurs IDs Brawl Stars
+    // Liste des rosters avec leurs 3 IDs Brawl Stars (remplace par les vrais IDs)
     const rosters = {
-        roster1: ["playerID1", "playerID2"], // Remplacer par les vrais IDs
-        roster2: ["playerID3", "playerID4"],
-        roster3: ["playerID5", "playerID6"],
-        roster4: ["playerID7", "playerID8"],
-        roster5: ["playerID9", "playerID10"],
-        // Ajouter plus de rosters si nécessaire
+        roster1: ["playerID1", "playerID2", "playerID3"], // 3 joueurs dans le roster 1
+        roster2: ["playerID4", "playerID5", "playerID6"], // 3 joueurs dans le roster 2
+        roster3: ["playerID7", "playerID8", "playerID9"], // 3 joueurs dans le roster 3
+        // Ajouter d'autres rosters si nécessaire
     };
 
     // API Key Brawl Stars (remplacer par ta propre clé)
