@@ -19,6 +19,21 @@ document.addEventListener("DOMContentLoaded", function () {
             { name: "Joueur8", trophies: 21000, expLevel: 155, victories3v3: 850, rankPoints: 320 },
             { name: "Joueur9", trophies: 19500, expLevel: 148, victories3v3: 780, rankPoints: 290 }
         ]
+        roster4: [
+            { name: "Joueur7", trophies: 20000, expLevel: 150, victories3v3: 800, rankPoints: 300 },
+            { name: "Joueur8", trophies: 21000, expLevel: 155, victories3v3: 850, rankPoints: 320 },
+            { name: "Joueur9", trophies: 19500, expLevel: 148, victories3v3: 780, rankPoints: 290 }
+        ]
+        roster5: [
+            { name: "Joueur7", trophies: 20000, expLevel: 150, victories3v3: 800, rankPoints: 300 },
+            { name: "Joueur8", trophies: 21000, expLevel: 155, victories3v3: 850, rankPoints: 320 },
+            { name: "Joueur9", trophies: 19500, expLevel: 148, victories3v3: 780, rankPoints: 290 }
+        ]
+        roster6: [
+            { name: "Joueur7", trophies: 20000, expLevel: 150, victories3v3: 800, rankPoints: 300 },
+            { name: "Joueur8", trophies: 21000, expLevel: 155, victories3v3: 850, rankPoints: 320 },
+            { name: "Joueur9", trophies: 19500, expLevel: 148, victories3v3: 780, rankPoints: 290 }
+        ]
     };
 
     // Fonction pour afficher les joueurs d'un roster
