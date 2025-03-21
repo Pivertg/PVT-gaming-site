@@ -438,3 +438,23 @@ footer {
 .social-links a:hover {
     background-color: #1cc28b;
 }
+.roster-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.roster-table th, .roster-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.roster-table th {
+    background-color: #333;
+    color: white;
+}
+
+.roster-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
