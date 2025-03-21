@@ -30,27 +30,34 @@
     </main>
 
     <script>
-        const API_URL = "https://ton-api.vercel.app/api";
+        const API_URL = "https://pvt-gaming-570vas4f9-pivert-gamings-projects.vercel.app/api";
 
         async function loadPlayers() {
-            const response = await fetch(`${API_URL}/getJoueurs`);
-            const players = await response.json();
-            const tableBody = document.querySelector("#players-table tbody");
-            tableBody.innerHTML = "";
+            try {
+                const response = await fetch(`${API_URL}/joueurs`);
+                if (!response.ok) throw new Error(`Erreur ${response.status}: ${response.statusText}`);
 
-            players.forEach(player => {
-                const row = `<tr>
-                    <td contenteditable="true" data-field="pseudo">${player.pseudo}</td>
-                    <td contenteditable="true" data-field="idBrawlStars">${player.idBrawlStars}</td>
-                    <td contenteditable="true" data-field="trophies">${player.trophies}</td>
-                    <td contenteditable="true" data-field="roster">${player.roster}</td>
-                    <td>
-                        <button onclick="updatePlayer(${player.id}, this)">💾 Sauvegarder</button>
-                        <button onclick="deletePlayer(${player.id})">🗑 Supprimer</button>
-                    </td>
-                </tr>`;
-                tableBody.innerHTML += row;
-            });
+                const players = await response.json();
+                const tableBody = document.querySelector("#players-table tbody");
+                tableBody.innerHTML = "";
+
+                players.forEach(player => {
+                    const row = `<tr>
+                        <td contenteditable="true" data-field="pseudo">${player.pseudo}</td>
+                        <td contenteditable="true" data-field="idBrawlStars">${player.idBrawlStars}</td>
+                        <td contenteditable="true" data-field="trophies">${player.trophies}</td>
+                        <td contenteditable="true" data-field="roster">${player.roster}</td>
+                        <td>
+                            <button onclick="updatePlayer(${player.id}, this)">💾 Sauvegarder</button>
+                            <button onclick="deletePlayer(${player.id})">🗑 Supprimer</button>
+                        </td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error("Erreur lors du chargement des joueurs:", error);
+                alert("❌ Impossible de charger les joueurs !");
+            }
         }
 
         async function updatePlayer(id, button) {
@@ -60,30 +67,43 @@
             const trophies = row.querySelector('[data-field="trophies"]').innerText;
             const roster = row.querySelector('[data-field="roster"]').innerText;
 
-            const response = await fetch(`${API_URL}/updateJoueur`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id, pseudo, idBrawlStars, trophies, roster })
-            });
+            try {
+                const response = await fetch(`${API_URL}/joueurs/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ pseudo, idBrawlStars, trophies, roster })
+                });
 
-            if (response.ok) {
-                alert("✅ Joueur mis à jour !");
-            } else {
-                alert("❌ Erreur !");
+                if (response.ok) {
+                    alert("✅ Joueur mis à jour !");
+                } else {
+                    throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la mise à jour:", error);
+                alert("❌ Erreur lors de la mise à jour !");
             }
         }
 
         async function deletePlayer(id) {
             if (!confirm("Voulez-vous vraiment supprimer ce joueur ?")) return;
 
-            await fetch(`${API_URL}/deleteJoueur`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id })
-            });
+            try {
+                const response = await fetch(`${API_URL}/joueurs/${id}`, {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" }
+                });
 
-            alert("🗑 Joueur supprimé !");
-            loadPlayers();
+                if (response.ok) {
+                    alert("🗑 Joueur supprimé !");
+                    loadPlayers();
+                } else {
+                    throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la suppression:", error);
+                alert("❌ Impossible de supprimer le joueur !");
+            }
         }
 
         document.getElementById("logout-btn").addEventListener("click", () => {
