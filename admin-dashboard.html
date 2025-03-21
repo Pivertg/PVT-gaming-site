@@ -17,6 +17,7 @@
         <h1>📋 Liste des Joueurs</h1>
 
         <button id="refresh-btn">🔄 Rafraîchir</button>
+        <button id="save-btn">💾 Sauvegarder</button>
 
         <table id="players-table">
             <thead>
@@ -56,15 +57,23 @@
             noPlayersMessage.classList.add("hidden");
 
             try {
-                const response = await fetch("http://localhost:3000/api/admin/joueurs", {
-                    headers: { "Authorization": token }
-                });
+                // Charger les joueurs depuis localStorage si disponible
+                let players = JSON.parse(localStorage.getItem("players")) || [];
 
-                if (!response.ok) {
-                    throw new Error("Erreur serveur");
+                if (players.length === 0) {
+                    // Si aucun joueur n'est sauvegardé, on récupère les données initiales
+                    const response = await fetch("http://localhost:3000/api/admin/joueurs", {
+                        headers: { "Authorization": token }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Erreur serveur");
+                    }
+
+                    players = await response.json();
+                    localStorage.setItem("players", JSON.stringify(players)); // Sauvegarde des joueurs localement
                 }
 
-                const players = await response.json();
                 tableBody.innerHTML = "";
 
                 if (players.length === 0) {
@@ -72,12 +81,12 @@
                     return;
                 }
 
-                players.forEach(player => {
+                players.forEach((player, index) => {
                     const row = `<tr>
-                        <td>${player.pseudo}</td>
-                        <td>${player.idBrawlStars}</td>
-                        <td>${player.trophies}</td>
-                        <td>${player.roster}</td>
+                        <td contenteditable="true" data-index="${index}" data-key="pseudo">${player.pseudo}</td>
+                        <td contenteditable="true" data-index="${index}" data-key="idBrawlStars">${player.idBrawlStars}</td>
+                        <td contenteditable="true" data-index="${index}" data-key="trophies">${player.trophies}</td>
+                        <td contenteditable="true" data-index="${index}" data-key="roster">${player.roster}</td>
                     </tr>`;
                     tableBody.innerHTML += row;
                 });
@@ -88,12 +97,34 @@
             }
         }
 
+        function savePlayers() {
+            const rows = document.querySelectorAll("#players-table tbody tr");
+            let updatedPlayers = [];
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll("td");
+                if (cells.length === 4) {
+                    updatedPlayers.push({
+                        pseudo: cells[0].innerText.trim(),
+                        idBrawlStars: cells[1].innerText.trim(),
+                        trophies: cells[2].innerText.trim(),
+                        roster: cells[3].innerText.trim(),
+                    });
+                }
+            });
+
+            localStorage.setItem("players", JSON.stringify(updatedPlayers));
+            alert("✅ Modifications enregistrées !");
+        }
+
         document.getElementById("logout-btn").addEventListener("click", () => {
             localStorage.removeItem("adminToken");
+            localStorage.removeItem("players"); // Supprime les données enregistrées après déconnexion
             window.location.href = "admin.html";
         });
 
         document.getElementById("refresh-btn").addEventListener("click", loadPlayers);
+        document.getElementById("save-btn").addEventListener("click", savePlayers);
 
         loadPlayers();
     </script>
