@@ -12,16 +12,15 @@
         <div class="logo">PVT|Gaming - Admin</div>
     </header>
 
- <div class="menu-container">
-            <span class="menu-icon" id="menu-icon">☰</span>
-            <nav class="dropdown-menu hidden" id="dropdown-menu">
-                <ul>
-                    <li><a href="index.html">🏠 Accueil</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-    
+    <div class="menu-container">
+        <span class="menu-icon" id="menu-icon">☰</span>
+        <nav class="dropdown-menu hidden" id="dropdown-menu">
+            <ul>
+                <li><a href="index.html">🏠 Accueil</a></li>
+            </ul>
+        </nav>
+    </div>
+
     <main class="login-container">
         <div class="login-box">
             <h1>🔑 Connexion Admin</h1>
@@ -42,33 +41,30 @@
     </main>
 
     <script>
-        document.getElementById("admin-login-form").addEventListener("submit", async function (event) {
+        // Fonction de décodage Base64 pour sécuriser un peu le mot de passe
+        function decodeBase64(str) {
+            return atob(str);
+        }
+
+        // Identifiants (pseudo et mot de passe encodé en Base64)
+        const ADMIN_PSEUDO = "admin";
+        const ENCODED_PASSWORD = "TW9uU3VwZXJNb3REZVBhc3NlMTIz"; // "MonSuperMotDePasse123" encodé
+
+        document.getElementById("admin-login-form").addEventListener("submit", function (event) {
             event.preventDefault();
 
             const pseudo = document.getElementById("admin-pseudo").value.trim();
             const password = document.getElementById("admin-password").value.trim();
 
-            try {
-                const response = await fetch("http://localhost:3000/api/admin/login", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ pseudo, password })
-                });
-
-                const result = await response.json();
-                if (response.ok) {
-                    alert("✅ Connexion réussie !");
-                    localStorage.setItem("adminToken", result.token);
-                    window.location.href = "admin-dashboard.html";
-                } else {
-                    alert("❌ " + result.error);
-                }
-            } catch (error) {
-                alert("❌ Erreur de connexion au serveur !");
+            // Vérification du pseudo et du mot de passe (décodé en clair)
+            if (pseudo === ADMIN_PSEUDO && password === decodeBase64(ENCODED_PASSWORD)) {
+                alert("✅ Connexion réussie !");
+                localStorage.setItem("adminToken", "adminLoggedIn"); // Simule une session
+                window.location.href = "admin-dashboard.html"; // Redirige vers le dashboard
+            } else {
+                alert("❌ Pseudo ou mot de passe incorrect !");
             }
         });
     </script>
-    <script src="menu.js"></script>
-    <script src="login.js"></script>
 </body>
 </html>
