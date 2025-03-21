@@ -3,31 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Gestion</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Admin - PVT Gaming</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        button {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">PVT|Gaming - Admin</div>
-        <button id="logout-btn">🚪 Déconnexion</button>
-    </header>
+    <h1>Tableau de bord Admin - PVT Gaming</h1>
 
-    <main class="admin-container">
-        <h1>📋 Liste des Joueurs</h1>
-        <table id="players-table">
-            <thead>
-                <tr>
-                    <th>Pseudo</th>
-                    <th>ID Brawl Stars</th>
-                    <th>Trophées</th>
-                    <th>Roster</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </main>
+    <table id="players-table">
+        <thead>
+            <tr>
+                <th>Pseudo</th>
+                <th>ID Brawl Stars</th>
+                <th>Trophées</th>
+                <th>Roster</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Les joueurs seront ajoutés ici dynamiquement -->
+        </tbody>
+    </table>
 
     <script>
         const API_URL = "https://pvt-gaming-570vas4f9-pivert-gamings-projects.vercel.app/api";
@@ -35,83 +47,75 @@
         async function loadPlayers() {
             try {
                 const response = await fetch(`${API_URL}/joueurs`);
-                if (!response.ok) {
-                    throw new Error(`Erreur HTTP: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+
                 const players = await response.json();
+                console.log("Joueurs chargés:", players);
+
                 const tableBody = document.querySelector("#players-table tbody");
                 tableBody.innerHTML = "";
-
                 players.forEach(player => {
-                    const row = `<tr>
-                        <td contenteditable="true" data-field="pseudo">${player.pseudo}</td>
-                        <td contenteditable="true" data-field="idBrawlStars">${player.idBrawlStars}</td>
-                        <td contenteditable="true" data-field="trophies">${player.trophies}</td>
-                        <td contenteditable="true" data-field="roster">${player.roster}</td>
-                        <td>
-                            <button onclick="updatePlayer(${player.id}, this)">💾 Sauvegarder</button>
-                            <button onclick="deletePlayer(${player.id})">🗑 Supprimer</button>
-                        </td>
-                    </tr>`;
+                    const row = `
+                        <tr>
+                            <td contenteditable="true" data-field="pseudo">${player.pseudo}</td>
+                            <td contenteditable="true" data-field="idBrawlStars">${player.idBrawlStars}</td>
+                            <td contenteditable="true" data-field="trophies">${player.trophies}</td>
+                            <td contenteditable="true" data-field="roster">${player.roster}</td>
+                            <td>
+                                <button onclick="updatePlayer(${player.id}, this)">💾 Sauvegarder</button>
+                                <button onclick="deletePlayer(${player.id})">🗑 Supprimer</button>
+                            </td>
+                        </tr>`;
                     tableBody.innerHTML += row;
                 });
             } catch (error) {
                 console.error("Erreur lors du chargement des joueurs:", error);
-                alert("❌ Erreur de chargement des joueurs !");
+                alert("❌ Impossible de charger les joueurs !");
             }
         }
 
         async function updatePlayer(id, button) {
             const row = button.closest("tr");
-            const pseudo = row.querySelector('[data-field="pseudo"]').innerText;
-            const idBrawlStars = row.querySelector('[data-field="idBrawlStars"]').innerText;
-            const trophies = row.querySelector('[data-field="trophies"]').innerText;
-            const roster = row.querySelector('[data-field="roster"]').innerText;
+            const updatedData = {
+                pseudo: row.cells[0].innerText,
+                idBrawlStars: row.cells[1].innerText,
+                trophies: parseInt(row.cells[2].innerText),
+                roster: row.cells[3].innerText
+            };
 
             try {
                 const response = await fetch(`${API_URL}/joueurs/${id}`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ pseudo, idBrawlStars, trophies, roster })
+                    body: JSON.stringify(updatedData)
                 });
 
-                if (response.ok) {
-                    alert("✅ Joueur mis à jour !");
-                } else {
-                    throw new Error(`Erreur HTTP: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+
+                alert("✅ Joueur mis à jour !");
             } catch (error) {
-                console.error("Erreur lors de la mise à jour:", error);
-                alert("❌ Erreur de mise à jour !");
+                console.error("Erreur lors de la mise à jour du joueur:", error);
+                alert("❌ Échec de la mise à jour !");
             }
         }
 
         async function deletePlayer(id) {
-            if (!confirm("Voulez-vous vraiment supprimer ce joueur ?")) return;
+            if (!confirm("⚠️ Êtes-vous sûr de vouloir supprimer ce joueur ?")) return;
 
             try {
-                const response = await fetch(`${API_URL}/joueurs/${id}`, {
-                    method: "DELETE"
-                });
+                const response = await fetch(`${API_URL}/joueurs/${id}`, { method: "DELETE" });
 
-                if (response.ok) {
-                    alert("🗑 Joueur supprimé !");
-                    loadPlayers();
-                } else {
-                    throw new Error(`Erreur HTTP: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+
+                alert("✅ Joueur supprimé !");
+                loadPlayers(); // Recharger la liste après suppression
             } catch (error) {
-                console.error("Erreur lors de la suppression:", error);
-                alert("❌ Erreur de suppression !");
+                console.error("Erreur lors de la suppression du joueur:", error);
+                alert("❌ Échec de la suppression !");
             }
         }
 
-        document.getElementById("logout-btn").addEventListener("click", () => {
-            localStorage.removeItem("adminToken");
-            window.location.href = "admin.html";
-        });
-
-        loadPlayers();
+        document.addEventListener("DOMContentLoaded", loadPlayers);
     </script>
 
 </body>
