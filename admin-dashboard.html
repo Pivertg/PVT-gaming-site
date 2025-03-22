@@ -6,23 +6,10 @@
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<script>
-    // Vérifie si l'utilisateur est bien un admin
-    if (localStorage.getItem("adminToken") !== "adminLoggedIn") {
-        alert("❌ Accès refusé ! Veuillez vous connecter.");
-        window.location.href = "admin.html"; // Redirige vers la connexion
-    }
-</script>
-<button onclick="logout()">🚪 Se déconnecter</button>
-<script>
-    function logout() {
-        localStorage.removeItem("adminToken"); // Supprime l'authentification
-        alert("👋 Déconnexion réussie !");
-        window.location.href = "admin.html"; // Redirige vers la connexion
-    }
-</script>
 <body>
+
     <h1>Gestion des Rosters</h1>
+    <button onclick="logout()">🚪 Se déconnecter</button>
 
     <!-- Ajouter un roster -->
     <input type="text" id="rosterName" placeholder="Nom du roster">
@@ -32,7 +19,22 @@
     <ul id="rosterList"></ul>
 
     <script>
-        const API_URL = "https://pvt-gaming-api.vercel.app/api";
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("Valeur de adminToken:", sessionStorage.getItem("adminToken"));
+
+            if (sessionStorage.getItem("adminToken") !== "adminLoggedIn") {
+                alert("❌ Accès refusé ! Veuillez vous connecter.");
+                window.location.href = "admin.html";
+            }
+        });
+
+        function logout() {
+            sessionStorage.removeItem("adminToken");
+            alert("👋 Déconnexion réussie !");
+            window.location.href = "admin.html";
+        }
+
+        const API_URL = "http://localhost:3000/api";
 
         async function chargerRosters() {
             const response = await fetch(`${API_URL}/rosters`);
@@ -105,5 +107,6 @@
 
         chargerRosters();
     </script>
+
 </body>
 </html>
