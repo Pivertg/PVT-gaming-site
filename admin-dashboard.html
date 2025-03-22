@@ -4,37 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="style-admin.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>Gestion des Rosters</h1>
-    <button onclick="logout()">🚪 Se déconnecter</button>
+    <!-- Barre du haut -->
+    <div class="navbar">
+        <h1>Dashboard</h1>
+        <button onclick="logout()">🚪 Se déconnecter</button>
+    </div>
 
     <!-- Ajouter un roster -->
-    <input type="text" id="rosterName" placeholder="Nom du roster">
-    <button onclick="ajouterRoster()">Ajouter Roster</button>
+    <div class="add-roster">
+        <input type="text" id="rosterName" placeholder="Nom du roster">
+        <button onclick="ajouterRoster()">Ajouter Roster</button>
+    </div>
 
-    <!-- Liste des rosters -->
-    <ul id="rosterList"></ul>
+    <!-- Conteneur des rosters -->
+    <div class="roster-container" id="rosterList"></div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            console.log("Valeur de adminToken:", sessionStorage.getItem("adminToken"));
-
-            if (sessionStorage.getItem("adminToken") !== "adminLoggedIn") {
-                alert("❌ Accès refusé ! Veuillez vous connecter.");
-                window.location.href = "admin.html";
-            }
-        });
-
-        function logout() {
-            sessionStorage.removeItem("adminToken");
-            alert("👋 Déconnexion réussie !");
-            window.location.href = "admin.html";
-        }
-
-        const API_URL = "https://pvt-gaming-api.vercel.app/api";
+        const API_URL = "http://localhost:3000/api";
 
         async function chargerRosters() {
             const response = await fetch(`${API_URL}/rosters`);
@@ -43,18 +33,31 @@
             rosterList.innerHTML = "";
 
             rosters.forEach(roster => {
-                const li = document.createElement("li");
-                li.innerHTML = `
-                    ${roster.nom} 
-                    <button onclick="supprimerRoster(${roster.id})">❌</button>
-                    <button onclick="afficherJoueurs(${roster.id})">Voir joueurs</button>
-                    <ul id="joueurs-${roster.id}"></ul>
-                    <input type="text" id="joueurPseudo-${roster.id}" placeholder="Pseudo">
-                    <input type="text" id="joueurIdBrawl-${roster.id}" placeholder="ID Brawl Stars">
-                    <input type="number" id="joueurTrophies-${roster.id}" placeholder="Trophées">
-                    <button onclick="ajouterJoueur(${roster.id})">Ajouter Joueur</button>
+                const div = document.createElement("div");
+                div.classList.add("roster-card");
+                div.innerHTML = `
+                    <h2>${roster.nom}</h2>
+                    <button onclick="supprimerRoster(${roster.id})">❌ Supprimer</button>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pseudo</th>
+                                <th>Trophées</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="joueurs-${roster.id}">
+                        </tbody>
+                    </table>
+
+                    <div class="add-player">
+                        <button onclick="ajouterJoueur(${roster.id})">+ Ajouter un joueur</button>
+                    </div>
                 `;
-                rosterList.appendChild(li);
+
+                rosterList.appendChild(div);
+                afficherJoueurs(roster.id);
             });
         }
 
@@ -75,34 +78,44 @@
 
         async function afficherJoueurs(rosterId) {
             const response = await fetch(`${API_URL}/rosters/${rosterId}`);
-            const joueurs = await response.json();
+            const data = await response.json();
             const joueursList = document.getElementById(`joueurs-${rosterId}`);
             joueursList.innerHTML = "";
 
-            joueurs.forEach(joueur => {
-                const li = document.createElement("li");
-                li.innerHTML = `${joueur.pseudo} - ${joueur.trophies} 🏆
-                    <button onclick="supprimerJoueur(${rosterId}, ${joueur.id})">❌</button>`;
-                joueursList.appendChild(li);
+            data.joueurs.forEach(joueur => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${joueur.pseudo}</td>
+                    <td>${joueur.trophies} 🏆</td>
+                    <td><button onclick="supprimerJoueur(${rosterId}, ${joueur.id})">❌</button></td>
+                `;
+                joueursList.appendChild(tr);
             });
         }
 
         async function ajouterJoueur(rosterId) {
-            const pseudo = document.getElementById(`joueurPseudo-${rosterId}`).value;
-            const idBrawlStars = document.getElementById(`joueurIdBrawl-${rosterId}`).value;
-            const trophies = document.getElementById(`joueurTrophies-${rosterId}`).value;
+            const pseudo = prompt("Pseudo du joueur :");
+            const trophies = prompt("Nombre de trophées :");
 
-            await fetch(`${API_URL}/rosters/${rosterId}/joueurs`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ pseudo, idBrawlStars, trophies })
-            });
-            afficherJoueurs(rosterId);
+            if (pseudo && trophies) {
+                await fetch(`${API_URL}/rosters/${rosterId}/joueurs`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ pseudo, trophies })
+                });
+                afficherJoueurs(rosterId);
+            }
         }
 
         async function supprimerJoueur(rosterId, joueurId) {
             await fetch(`${API_URL}/rosters/${rosterId}/joueurs/${joueurId}`, { method: "DELETE" });
             afficherJoueurs(rosterId);
+        }
+
+        function logout() {
+            localStorage.removeItem("adminToken");
+            alert("👋 Déconnexion réussie !");
+            window.location.href = "admin.html";
         }
 
         chargerRosters();
