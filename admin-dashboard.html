@@ -4,27 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="style-admin.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Barre du haut -->
     <div class="navbar">
         <h1>Dashboard</h1>
         <button onclick="logout()">🚪 Se déconnecter</button>
     </div>
 
-    <!-- Ajouter un roster -->
     <div class="add-roster">
         <input type="text" id="rosterName" placeholder="Nom du roster">
         <button onclick="ajouterRoster()">Ajouter Roster</button>
     </div>
 
-    <!-- Conteneur des rosters -->
     <div class="roster-container" id="rosterList"></div>
 
     <script>
-        const API_URL = "https://pvt-gaming-api.vercel.app/api";
+        const API_URL = "http://localhost:3000/api";
 
         async function chargerRosters() {
             const response = await fetch(`${API_URL}/rosters`);
@@ -36,14 +33,17 @@
                 const div = document.createElement("div");
                 div.classList.add("roster-card");
                 div.innerHTML = `
-                    <h2>${roster.nom}</h2>
+                    <input type="text" class="editable" value="${roster.nom}" onblur="modifierRoster(${roster.id}, this.value)">
                     <button onclick="supprimerRoster(${roster.id})">❌ Supprimer</button>
 
                     <table>
                         <thead>
                             <tr>
                                 <th>Pseudo</th>
-                                <th>Trophées</th>
+                                <th>🏆 Trophées</th>
+                                <th>🏅 Win 3V3</th>
+                                <th>📊 Classé</th>
+                                <th>🔝 Rang Max</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -58,6 +58,14 @@
 
                 rosterList.appendChild(div);
                 afficherJoueurs(roster.id);
+            });
+        }
+
+        async function modifierRoster(rosterId, nouveauNom) {
+            await fetch(`${API_URL}/rosters/${rosterId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nom: nouveauNom })
             });
         }
 
@@ -85,23 +93,37 @@
             data.joueurs.forEach(joueur => {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-                    <td>${joueur.pseudo}</td>
-                    <td>${joueur.trophies} 🏆</td>
+                    <td><input type="text" class="editable" value="${joueur.pseudo}" onblur="modifierJoueur(${rosterId}, ${joueur.id}, 'pseudo', this.value)"></td>
+                    <td><input type="number" class="editable" value="${joueur.trophies}" onblur="modifierJoueur(${rosterId}, ${joueur.id}, 'trophies', this.value)"></td>
+                    <td><input type="number" class="editable" value="${joueur.win3v3}" onblur="modifierJoueur(${rosterId}, ${joueur.id}, 'win3v3', this.value)"></td>
+                    <td><input type="text" class="editable" value="${joueur.classement}" onblur="modifierJoueur(${rosterId}, ${joueur.id}, 'classement', this.value)"></td>
+                    <td><input type="number" class="editable" value="${joueur.rangMax}" onblur="modifierJoueur(${rosterId}, ${joueur.id}, 'rangMax', this.value)"></td>
                     <td><button onclick="supprimerJoueur(${rosterId}, ${joueur.id})">❌</button></td>
                 `;
                 joueursList.appendChild(tr);
             });
         }
 
+        async function modifierJoueur(rosterId, joueurId, champ, valeur) {
+            await fetch(`${API_URL}/rosters/${rosterId}/joueurs/${joueurId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ [champ]: valeur })
+            });
+        }
+
         async function ajouterJoueur(rosterId) {
             const pseudo = prompt("Pseudo du joueur :");
             const trophies = prompt("Nombre de trophées :");
+            const win3v3 = prompt("Nombre de victoires en 3V3 :");
+            const classement = prompt("Classé (Bronze, Argent, Or...) :");
+            const rangMax = prompt("Rang Max atteint :");
 
-            if (pseudo && trophies) {
+            if (pseudo && trophies && win3v3 && classement && rangMax) {
                 await fetch(`${API_URL}/rosters/${rosterId}/joueurs`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ pseudo, trophies })
+                    body: JSON.stringify({ pseudo, trophies, win3v3, classement, rangMax })
                 });
                 afficherJoueurs(rosterId);
             }
