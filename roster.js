@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        fetch(`http://localhost:3000/api/rosters/${rosterId}`)
+        fetch(`https://pvt-gaming-api.vercel.app/api/rosters/${rosterId}`)
             .then(response => response.json())
             .then(data => {
                 if (!data.joueurs.length) {
