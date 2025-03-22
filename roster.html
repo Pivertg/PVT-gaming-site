@@ -10,7 +10,7 @@
     <header>
         <div class="logo">PVT|Gaming</div>
         <div class="menu-container">
-            <span class="menu-icon">☰</span>
+            <span class="menu-icon" id="menu-icon">☰</span>
             <nav class="dropdown-menu">
                 <ul>
                     <li><a href="index.html">🏠 Accueil</a></li>
@@ -24,18 +24,14 @@
 
     <main>
         <h1>Nos Rosters</h1>
+        
+        <!-- Sélection du roster -->
         <label for="roster-select">Sélectionnez un roster :</label>
         <select id="roster-select">
             <option value="">-- Choisissez un roster --</option>
-            <option value="roster1">Roster 1</option>
-            <option value="roster2">Roster 2</option>
-            <option value="roster2">Roster 3</option>
-            <option value="roster2">Roster 4</option>
-            <option value="roster2">Roster 5</option>
-            <option value="roster2">Roster 6</option>
-            <!-- Ajouter ici d'autres rosters si nécessaire -->
         </select>
 
+        <!-- Détails du roster sélectionné -->
         <div id="roster-details">
             <p>Sélectionnez un roster pour voir les détails.</p>
         </div>
@@ -45,12 +41,8 @@
         <p>&copy; 2025 PVT|Gaming - Tous droits réservés</p>
     </footer>
 
-    <!-- Boîte de connexion -->
-    <div id="login-container"></div>
-
     <!-- Scripts -->
     <script src="menu.js"></script>
-    <script src="login.js"></script>
-    <script src="roster.js"></script>  <!-- Nouveau fichier de script -->
+    <script src="roster.js"></script> <!-- Script pour charger les rosters depuis l'API -->
 </body>
 </html>

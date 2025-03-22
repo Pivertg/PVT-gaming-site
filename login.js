@@ -1,16 +1,22 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const openLogin = document.getElementById("open-login");
-    const closeLogin = document.getElementById("close-login");
-    const loginModal = document.getElementById("login-container");
+document.getElementById("login-form").addEventListener("submit", function (event) {
+    event.preventDefault();
 
-    if (openLogin && loginModal) {
-        openLogin.addEventListener("click", function (event) {
-            event.preventDefault();
-            loginModal.classList.remove("hidden");
-        });
+    const role = document.getElementById("role").value;
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
 
-        closeLogin.addEventListener("click", function () {
-            loginModal.classList.add("hidden");
-        });
+    // Vérification des identifiants (remplace ceci par une requête API plus tard)
+    if (role === "admin" && username === "admin" && password === "MonSuperMotDePasse123") {
+        localStorage.setItem("adminToken", "adminLoggedIn");
+        alert("✅ Connexion admin réussie !");
+        window.location.href = "admin-dashboard.html";
+    } 
+    else if (role === "player" && username !== "" && password !== "") {
+        localStorage.setItem("playerToken", "playerLoggedIn");
+        alert("✅ Connexion joueur réussie !");
+        window.location.href = "player-dashboard.html";
+    } 
+    else {
+        alert("❌ Identifiants incorrects !");
     }
 });

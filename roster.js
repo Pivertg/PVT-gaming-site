@@ -1,86 +1,58 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
     const rosterSelect = document.getElementById("roster-select");
     const rosterDetails = document.getElementById("roster-details");
 
-    // Liste des rosters avec leurs informations
-    const rosters = {
-        roster1: [
-            { name: "Joueur1", trophies: 15000, expLevel: 120, victories3v3: 500, rankPoints: 200 },
-            { name: "Joueur2", trophies: 17000, expLevel: 130, victories3v3: 600, rankPoints: 220 },
-            { name: "Joueur3", trophies: 16000, expLevel: 125, victories3v3: 550, rankPoints: 210 }
-        ],
-        roster2: [
-            { name: "Joueur4", trophies: 18000, expLevel: 140, victories3v3: 700, rankPoints: 250 },
-            { name: "Joueur5", trophies: 19000, expLevel: 145, victories3v3: 750, rankPoints: 270 },
-            { name: "Joueur6", trophies: 17500, expLevel: 135, victories3v3: 650, rankPoints: 230 }
-        ],
-        roster3: [
-            { name: "Joueur7", trophies: 20000, expLevel: 150, victories3v3: 800, rankPoints: 300 },
-            { name: "Joueur8", trophies: 21000, expLevel: 155, victories3v3: 850, rankPoints: 320 },
-            { name: "Joueur9", trophies: 19500, expLevel: 148, victories3v3: 780, rankPoints: 290 }
-        ]
-        roster4: [
-            { name: "Joueur7", trophies: 20000, expLevel: 150, victories3v3: 800, rankPoints: 300 },
-            { name: "Joueur8", trophies: 21000, expLevel: 155, victories3v3: 850, rankPoints: 320 },
-            { name: "Joueur9", trophies: 19500, expLevel: 148, victories3v3: 780, rankPoints: 290 }
-        ]
-        roster5: [
-            { name: "Joueur7", trophies: 20000, expLevel: 150, victories3v3: 800, rankPoints: 300 },
-            { name: "Joueur8", trophies: 21000, expLevel: 155, victories3v3: 850, rankPoints: 320 },
-            { name: "Joueur9", trophies: 19500, expLevel: 148, victories3v3: 780, rankPoints: 290 }
-        ]
-        roster6: [
-            { name: "Joueur7", trophies: 20000, expLevel: 150, victories3v3: 800, rankPoints: 300 },
-            { name: "Joueur8", trophies: 21000, expLevel: 155, victories3v3: 850, rankPoints: 320 },
-            { name: "Joueur9", trophies: 19500, expLevel: 148, victories3v3: 780, rankPoints: 290 }
-        ]
-    };
+    if (!rosterSelect || !rosterDetails) {
+        console.error("❌ Erreur : Élément HTML introuvable !");
+        return;
+    }
 
-    // Fonction pour afficher les joueurs d'un roster
-    function displayRoster(rosterKey) {
-        const selectedRoster = rosters[rosterKey];
+    // Charger la liste des rosters
+    fetch("http://localhost:3000/api/rosters")
+        .then(response => response.json())
+        .then(rosters => {
+            rosters.forEach(roster => {
+                const option = document.createElement("option");
+                option.value = roster.id;
+                option.textContent = roster.nom;
+                rosterSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error("❌ Erreur lors du chargement des rosters :", error));
 
-        if (!selectedRoster || selectedRoster.length === 0) {
-            rosterDetails.innerHTML = "<p>Aucun joueur inscrit dans ce roster.</p>";
+    // Afficher les joueurs d'un roster sélectionné
+    rosterSelect.addEventListener("change", () => {
+        const rosterId = rosterSelect.value;
+
+        if (!rosterId) {
+            rosterDetails.innerHTML = "<p>Sélectionnez un roster pour voir les détails.</p>";
             return;
         }
 
-        let tableHTML = `
-            <h2>${rosterKey.replace("roster", "Roster ")}</h2>
-            <table class="roster-table">
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Trophées</th>
-                        <th>Expérience</th>
-                        <th>Victoires 3v3</th>
-                        <th>Points de Classement</th>
-                    </tr>
-                </thead>
-                <tbody>`;
+        fetch(`http://localhost:3000/api/rosters/${rosterId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (!data.joueurs.length) {
+                    rosterDetails.innerHTML = "<p>Aucun joueur dans ce roster.</p>";
+                    return;
+                }
 
-        selectedRoster.forEach(player => {
-            tableHTML += `
-                <tr>
-                    <td>${player.name}</td>
-                    <td>${player.trophies}</td>
-                    <td>${player.expLevel}</td>
-                    <td>${player.victories3v3}</td>
-                    <td>${player.rankPoints}</td>
-                </tr>`;
-        });
-
-        tableHTML += `</tbody></table>`;
-        rosterDetails.innerHTML = tableHTML;
-    }
-
-    // Écouter le changement de sélection dans le menu déroulant
-    rosterSelect.addEventListener("change", function () {
-        const selectedRoster = this.value;
-        if (selectedRoster) {
-            displayRoster(selectedRoster);
-        } else {
-            rosterDetails.innerHTML = "<p>Sélectionnez un roster pour voir les détails.</p>";
-        }
+                let html = `<h2>${data.nom}</h2><ul>`;
+                data.joueurs.forEach(joueur => {
+                    html += `
+                        <li>
+                            <strong>${joueur.pseudo}</strong><br>
+                            🏆 Trophées : ${joueur.trophies}<br>
+                            🎮 ID Brawl Stars : ${joueur.idBrawlStars}<br>
+                            🏅 Win 3V3 : ${joueur.win3v3}<br>
+                            📊 Classé : ${joueur.classer}<br>
+                            🔝 Rang Max : ${joueur.rangMax}
+                        </li><br>
+                    `;
+                });
+                html += `</ul>`;
+                rosterDetails.innerHTML = html;
+            })
+            .catch(error => console.error("❌ Erreur lors de l'affichage du roster :", error));
     });
 });

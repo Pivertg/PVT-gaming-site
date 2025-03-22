@@ -18,8 +18,8 @@
                     <li><a href="index.html">🏠 Accueil</a></li>
                     <li><a href="reseau.html">📱 Reseau</a></li>
                     <li><a href="roster.html">📋 Rosters</a></li>
-                    <li><a href="login-inscription.html">🖋️ Inscription des nouveau joueur</a></li>
-                    <li><a href="admin.html"> Connexion</a></li>
+                    <li><a href="login-inscription.html">🖋️ Inscription des nouveaux joueurs</a></li>
+                    <li><a href="admin.html">🔑 Connexion Admin</a></li>
                 </ul>
             </nav>
         </div>
@@ -27,7 +27,7 @@
 
     <main class="login-container">
         <div class="login-box">
-            <h1>🔑 Connexion</h1>
+            <h1>🔑 Connexion Joueur</h1>
             <form id="login-form">
                 <div class="input-group">
                     <label for="username">👤 Pseudo</label>
@@ -48,9 +48,26 @@
         <p>&copy; 2025 PVT|Gaming - Tous droits réservés</p>
     </footer>
 
-    <!-- Scripts -->
+    <!-- Script pour gérer la connexion des joueurs -->
+    <script>
+        document.getElementById("login-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            // Ici, tu peux ajouter une vraie vérification avec une base de données
+            if (username && password) {
+                alert("✅ Connexion réussie !");
+                localStorage.setItem("playerToken", username); // Stocke le pseudo comme token
+                window.location.href = "player-dashboard.html"; // Redirige vers le tableau de bord joueur
+            } else {
+                alert("❌ Pseudo ou mot de passe incorrect !");
+            }
+        });
+    </script>
+
     <script src="menu.js"></script>
-    <script src="login.js"></script>
 
 </body>
 </html>

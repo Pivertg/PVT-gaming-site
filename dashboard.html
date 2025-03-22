@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="style.css">
     <script defer src="script.js"></script>
 </head>
+<script>
+    // Vérifie si le joueur est bien connecté
+    if (!localStorage.getItem("playerToken")) {
+        alert("❌ Accès refusé ! Veuillez vous connecter.");
+        window.location.href = "login.html"; // Redirige vers la connexion joueur
+    }
+</script>
 <body>
 
     <header>
