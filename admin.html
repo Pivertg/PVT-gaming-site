@@ -17,7 +17,7 @@
         <nav class="dropdown-menu hidden" id="dropdown-menu">
             <ul>
                 <li><a href="index.html">🏠 Accueil</a></li>
-                <li><a href="reseau.html">📱 Réseau</a></li>
+                <li><a href="reseau.html">📱 Reseau</a></li>
                 <li><a href="roster.html">📋 Rosters</a></li>
                 <li><a href="login-inscription.html">🖋️ Inscription des nouveaux joueurs</a></li>
                 <li><a href="admin.html">🔐 Connexion</a></li>
@@ -45,28 +45,9 @@
     </main>
 
     <script>
-        const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
-
-        function checkSession() {
-            const adminToken = localStorage.getItem("adminToken");
-            const sessionTime = localStorage.getItem("sessionTime");
-
-            if (!adminToken || !sessionTime) {
-                forceLogout();
-                return;
-            }
-
-            const currentTime = new Date().getTime();
-            if (currentTime - parseInt(sessionTime) > SESSION_TIMEOUT) {
-                alert("⏳ Session expirée, veuillez vous reconnecter.");
-                forceLogout();
-            }
-        }
-
-        function forceLogout() {
-            localStorage.removeItem("adminToken");
-            localStorage.removeItem("sessionTime");
-            window.location.href = "admin.html";
+        // Vérifie si l'utilisateur est déjà connecté et redirige s'il l'est
+        if (sessionStorage.getItem("adminToken") === "adminLoggedIn") {
+            window.location.href = "admin-dashboard.html";
         }
 
         document.getElementById("admin-login-form").addEventListener("submit", function (event) {
@@ -77,8 +58,7 @@
 
             if (pseudo === "admin" && password === "MonSuperMotDePasse123") {
                 alert("✅ Connexion réussie !");
-                localStorage.setItem("adminToken", "adminLoggedIn");
-                localStorage.setItem("sessionTime", new Date().getTime());
+                sessionStorage.setItem("adminToken", "adminLoggedIn"); // Stocke la session temporaire
                 setTimeout(() => {
                     window.location.href = "admin-dashboard.html";
                 }, 500);
@@ -86,9 +66,6 @@
                 alert("❌ Pseudo ou mot de passe incorrect !");
             }
         });
-
-        // Vérifie la session dès l'ouverture de la page
-        checkSession();
     </script>
 
     <script src="menu.js"></script>
