@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Charger la liste des rosters
-    fetch("http://localhost:3000/api/rosters")
+    fetch("https://pvt-gaming-api.vercel.app/api")
         .then(response => response.json())
         .then(rosters => {
             rosters.forEach(roster => {
