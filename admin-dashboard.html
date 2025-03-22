@@ -69,24 +69,35 @@
         }
 
         async function modifierRoster(rosterId, nouveauNom) {
+            if (!nouveauNom.trim()) {
+                alert("Le nom du roster ne peut pas être vide !");
+                return;
+            }
             await fetch(`${API_URL}/rosters/${rosterId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ nom: nouveauNom })
             });
+            alert("Nom du roster mis à jour !");
         }
 
         async function ajouterRoster() {
-            const nom = document.getElementById("rosterName").value;
+            const nom = document.getElementById("rosterName").value.trim();
+            if (!nom) {
+                alert("Veuillez entrer un nom de roster !");
+                return;
+            }
             await fetch(`${API_URL}/rosters`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ nom })
             });
+            document.getElementById("rosterName").value = "";
             chargerRosters();
         }
 
         async function supprimerRoster(id) {
+            if (!confirm("Êtes-vous sûr de vouloir supprimer ce roster ?")) return;
             await fetch(`${API_URL}/rosters/${id}`, { method: "DELETE" });
             chargerRosters();
         }
@@ -112,31 +123,40 @@
         }
 
         async function modifierJoueur(rosterId, joueurId, champ, valeur) {
+            if (!valeur.trim()) {
+                alert("La valeur ne peut pas être vide !");
+                return;
+            }
             await fetch(`${API_URL}/rosters/${rosterId}/joueurs/${joueurId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ [champ]: valeur })
             });
+            alert("Joueur mis à jour !");
         }
 
         async function ajouterJoueur(rosterId) {
-            const pseudo = prompt("Pseudo du joueur :");
-            const trophies = prompt("Nombre de trophées :");
-            const win3v3 = prompt("Nombre de victoires en 3V3 :");
-            const classement = prompt("Classé (Bronze, Argent, Or...) :");
-            const rangMax = prompt("Rang Max atteint :");
+            const pseudo = prompt("Pseudo du joueur :").trim();
+            const trophies = prompt("Nombre de trophées :").trim();
+            const win3v3 = prompt("Nombre de victoires en 3V3 :").trim();
+            const classement = prompt("Classé (Bronze, Argent, Or...) :").trim();
+            const rangMax = prompt("Rang Max atteint :").trim();
 
-            if (pseudo && trophies && win3v3 && classement && rangMax) {
-                await fetch(`${API_URL}/rosters/${rosterId}/joueurs`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ pseudo, trophies, win3v3, classement, rangMax })
-                });
-                afficherJoueurs(rosterId);
+            if (!pseudo || !trophies || !win3v3 || !classement || !rangMax) {
+                alert("Tous les champs doivent être remplis !");
+                return;
             }
+
+            await fetch(`${API_URL}/rosters/${rosterId}/joueurs`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ pseudo, trophies, win3v3, classement, rangMax })
+            });
+            afficherJoueurs(rosterId);
         }
 
         async function supprimerJoueur(rosterId, joueurId) {
+            if (!confirm("Voulez-vous vraiment supprimer ce joueur ?")) return;
             await fetch(`${API_URL}/rosters/${rosterId}/joueurs/${joueurId}`, { method: "DELETE" });
             afficherJoueurs(rosterId);
         }
