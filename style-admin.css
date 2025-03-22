@@ -1,139 +1,31 @@
-/* === Réinitialisation CSS === */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
-/* === Style général === */
-body {
-    background-color: #1e1e2f;
-    color: white;
-    padding: 20px;
-}
-
-/* === Barre du haut (Dashboard + Déconnexion) === */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #2d2d44;
-    padding: 15px 30px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-}
-
-.navbar h1 {
-    font-size: 24px;
-}
-
-.navbar button {
-    background-color: #ff4757;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 16px;
+/* === Style pour rendre les champs modifiables === */
+.editable {
     cursor: pointer;
-    border-radius: 5px;
-    transition: 0.3s;
-}
-
-.navbar button:hover {
-    background-color: #e84148;
-}
-
-/* === Bouton pour ajouter un roster === */
-.add-roster {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.add-roster input {
-    padding: 10px;
+    background-color: transparent;
     border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    width: 300px;
-    margin-right: 10px;
-}
-
-.add-roster button {
-    background-color: #00b894;
     color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: 0.3s;
-}
-
-.add-roster button:hover {
-    background-color: #019875;
-}
-
-/* === Liste des Rosters === */
-.roster-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
-
-.roster-card {
-    background-color: #2d2d44;
-    padding: 20px;
-    border-radius: 10px;
-    width: 400px;
     text-align: center;
-}
-
-.roster-card h2 {
-    margin-bottom: 10px;
-}
-
-/* === Tableau des joueurs === */
-table {
+    font-size: 16px;
     width: 100%;
-    margin-top: 10px;
-    border-collapse: collapse;
 }
 
-th, td {
-    padding: 10px;
-    border: 1px solid #3a3a5e;
+.editable:focus {
+    background-color: #3a3a5e;
+    outline: none;
+    border-radius: 5px;
+}
+
+/* === Amélioration du tableau des joueurs === */
+td input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: white;
     text-align: center;
 }
 
-th {
+td input:focus {
     background-color: #3a3a5e;
-}
-
-/* === Bouton Ajouter Joueur === */
-.add-player {
-    margin-top: 10px;
-}
-
-.add-player button {
-    background-color: #0984e3;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    font-size: 14px;
-    cursor: pointer;
+    outline: none;
     border-radius: 5px;
-    transition: 0.3s;
-}
-
-.add-player button:hover {
-    background-color: #086dc1;
-}
-
-/* === Responsive Design === */
-@media (max-width: 768px) {
-    .roster-card {
-        width: 90%;
-    }
 }
