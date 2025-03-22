@@ -46,22 +46,22 @@
 
     <script>
         // Vérifie si l'utilisateur est déjà connecté
-        if (localStorage.getItem("adminToken")) {
+        if (sessionStorage.getItem("adminToken")) {
             window.location.href = "admin-dashboard.html";
         }
 
-        // Gestion du formulaire de connexion
         document.getElementById("admin-login-form").addEventListener("submit", function (event) {
             event.preventDefault();
 
             const pseudo = document.getElementById("admin-pseudo").value.trim();
             const password = document.getElementById("admin-password").value.trim();
 
-            // Vérifie les identifiants (idéalement, utiliser une API et non du JS côté client)
             if (pseudo === "admin" && password === "MonSuperMotDePasse123") {
                 alert("✅ Connexion réussie !");
-                localStorage.setItem("adminToken", "adminLoggedIn"); // Simule une session
-                window.location.href = "admin-dashboard.html"; // Redirection
+                sessionStorage.setItem("adminToken", "adminLoggedIn"); // Change localStorage par sessionStorage
+                setTimeout(() => {
+                    window.location.href = "admin-dashboard.html";
+                }, 500);
             } else {
                 alert("❌ Pseudo ou mot de passe incorrect !");
             }
@@ -69,8 +69,5 @@
     </script>
 
     <script src="menu.js"></script>
-    <script src="login.js"></script>
-
 </body>
 </html>
-
