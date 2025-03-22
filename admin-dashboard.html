@@ -6,6 +6,13 @@
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="style-admin.css">
 </head>
+<script>
+    // Vérifie si l'utilisateur est bien un admin
+    if (localStorage.getItem("adminToken") !== "adminLoggedIn") {
+        alert("❌ Accès refusé ! Veuillez vous connecter.");
+        window.location.href = "admin.html"; // Redirige vers la connexion
+    }
+</script>
 <body>
 
     <div class="navbar">
