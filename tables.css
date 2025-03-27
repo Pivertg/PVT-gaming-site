@@ -34,3 +34,28 @@
 .roster-table th, .roster-table td {
     border-radius: 5px;
 }
+.roster-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.roster-table th, .roster-table td {
+    border: 1px solid #444;
+    padding: 10px;
+    text-align: center;
+}
+
+.roster-table th {
+    background-color: #222;
+    color: white;
+}
+
+.roster-table tr:nth-child(even) {
+    background-color: #333;
+}
+
+.roster-table tr:nth-child(odd) {
+    background-color: #1a1a1a;
+}
+
