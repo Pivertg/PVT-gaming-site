@@ -1,59 +1,66 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const rosterSelect = document.getElementById("roster-select");
-    const rosterBody = document.getElementById("roster-body");
-    const rosterDetails = document.getElementById("roster-details");
+// Définir les données des rosters manuellement
+const rosters = {
+    "roster1": [
+        { name: "John Doe", pseudo: "johnny", trophies: 10, win3v3: 15, ranking: "Plat 1", maxRank: "Gold" },
+        { name: "Jane Smith", pseudo: "janey", trophies: 8, win3v3: 12, ranking: "Gold 2", maxRank: "Silver" }
+    ],
+    "roster2": [
+        { name: "Mark Green", pseudo: "marky", trophies: 5, win3v3: 8, ranking: "Gold 3", maxRank: "Gold" },
+        { name: "Lisa White", pseudo: "lisaw", trophies: 6, win3v3: 10, ranking: "Silver 1", maxRank: "Bronze" }
+    ],
+    "roster3": [
+        { name: "Paul Black", pseudo: "pauly", trophies: 15, win3v3: 25, ranking: "Diamond 2", maxRank: "Platinum" },
+        { name: "Sophie Brown", pseudo: "sophie", trophies: 12, win3v3: 20, ranking: "Platinum 3", maxRank: "Gold" }
+    ]
+};
 
-    if (!rosterSelect || !rosterBody) {
-        console.error("Erreur : Éléments introuvables !");
+// Fonction pour afficher les détails du roster sélectionné
+function displayRoster() {
+    const selectedRoster = document.getElementById('roster-select').value;
+    const rosterDetails = document.getElementById('roster-details');
+    
+    // Si aucun roster n'est sélectionné, on affiche un message d'information
+    if (!selectedRoster) {
+        rosterDetails.innerHTML = '<p>Sélectionnez un roster pour voir les détails.</p>';
         return;
     }
 
-    // === DONNÉES MANUELLES ===
-    const rosters = {
-        "Roster 1": [
-            { name: "John Doe", pseudo: "johnny", trophées: 10, win3v3: 15, classement: "Plat 1", rangMax: "Gold" },
-            { name: "Jane Smith", pseudo: "janey", trophées: 8, win3v3: 12, classement: "Gold 2", rangMax: "Silver" }
-        ],
-        "Roster 2": [
-            { name: "Max Power", pseudo: "maxp", trophées: 12, win3v3: 20, classement: "Diamond", rangMax: "Plat" },
-            { name: "Sara White", pseudo: "saraW", trophées: 11, win3v3: 18, classement: "Plat 3", rangMax: "Gold" }
-        ],
-        "Roster 3": [
-            { name: "Tom Speed", pseudo: "speedyT", trophées: 14, win3v3: 22, classement: "Champ", rangMax: "Diamond" },
-            { name: "Elise Thunder", pseudo: "eliseT", trophées: 13, win3v3: 19, classement: "Diamond", rangMax: "Plat" }
-        ]
-    };
+    // Si un roster est sélectionné, on crée un tableau pour afficher les informations des joueurs
+    const players = rosters[selectedRoster];
+    let tableHTML = `
+        <table class="roster-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Pseudo</th>
+                    <th>Trophées</th>
+                    <th>Win 3v3</th>
+                    <th>Classement</th>
+                    <th>Rang Max</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
 
-    // === AFFICHER LE ROSTER SÉLECTIONNÉ ===
-    function displayRoster(rosterName) {
-        rosterBody.innerHTML = ""; // Effacer les anciennes données
-
-        if (!rosters[rosterName]) {
-            rosterDetails.innerHTML = "<p>Aucune donnée pour ce roster.</p>";
-            return;
-        }
-
-        rosters[rosterName].forEach(player => {
-            const row = document.createElement("tr");
-
-            row.innerHTML = `
+    // Remplir le tableau avec les données des joueurs
+    players.forEach(player => {
+        tableHTML += `
+            <tr>
                 <td>${player.name}</td>
                 <td>${player.pseudo}</td>
-                <td>${player.trophées}</td>
+                <td>${player.trophies}</td>
                 <td>${player.win3v3}</td>
-                <td>${player.classement}</td>
-                <td>${player.rangMax}</td>
-            `;
-
-            rosterBody.appendChild(row);
-        });
-    }
-
-    // === ÉCOUTE DU CHANGEMENT DE SÉLECTION ===
-    rosterSelect.addEventListener("change", function () {
-        displayRoster(this.value);
+                <td>${player.ranking}</td>
+                <td>${player.maxRank}</td>
+            </tr>
+        `;
     });
 
-    // === MESSAGE PAR DÉFAUT ===
-    rosterDetails.innerHTML = "<p>Sélectionnez un roster pour voir les détails.</p>";
-});
+    tableHTML += `</tbody></table>`;
+
+    // Afficher le tableau dans la zone des détails
+    rosterDetails.innerHTML = tableHTML;
+}
+
+// Ajouter un événement pour déclencher la fonction lorsque le roster est sélectionné
+document.getElementById('roster-select').addEventListener('change', displayRoster);
