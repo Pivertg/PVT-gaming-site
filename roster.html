@@ -30,17 +30,16 @@
         <label for="roster-select">Sélectionnez un roster :</label>
         <select id="roster-select">
             <option value="">-- Choisissez un roster --</option>
-            <!-- Ajouter les options de rosters ici -->
-            <option value="roster1">Roster 1</option>
-            <option value="roster2">Roster 2</option>
-            <option value="roster3">Roster 3</option>
+            <option value="Roster 1">Roster 1</option>
+            <option value="Roster 2">Roster 2</option>
+            <option value="Roster 3">Roster 3</option>
         </select>
 
         <!-- Détails du roster sélectionné -->
         <div id="roster-details">
             <p>Sélectionnez un roster pour voir les détails.</p>
 
-            <!-- Tableau des joueurs du roster sélectionné -->
+            <!-- Tableau généré dynamiquement -->
             <table class="roster-table">
                 <thead>
                     <tr>
@@ -52,25 +51,8 @@
                         <th>Rang Max</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="roster-body">
                     <!-- Les joueurs seront affichés ici dynamiquement avec JavaScript -->
-                    <tr>
-                        <td>John Doe</td>
-                        <td>johnny</td>
-                        <td>10</td>
-                        <td>15</td>
-                        <td>Plat 1</td>
-                        <td>Gold</td>
-                    </tr>
-                    <tr>
-                        <td>Jane Smith</td>
-                        <td>janey</td>
-                        <td>8</td>
-                        <td>12</td>
-                        <td>Gold 2</td>
-                        <td>Silver</td>
-                    </tr>
-                    <!-- Ajouter d'autres joueurs si nécessaire -->
                 </tbody>
             </table>
         </div>
@@ -82,6 +64,6 @@
 
     <!-- Scripts -->
     <script src="menu.js"></script>
-    <script src="roster.js"></script> <!-- Script pour charger les rosters depuis l'API (si nécessaire) -->
+    <script src="roster.js"></script> <!-- Gestion des rosters -->
 </body>
 </html>
