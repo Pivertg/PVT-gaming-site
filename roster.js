@@ -25,8 +25,15 @@ function displayRoster() {
         return;
     }
 
-    // Si un roster est sélectionné, on crée un tableau pour afficher les informations des joueurs
+    // Vérifie si le roster sélectionné existe dans l'objet "rosters"
     const players = rosters[selectedRoster];
+    
+    if (!players) {
+        rosterDetails.innerHTML = `<p>Le roster ${selectedRoster} n'existe pas.</p>`;
+        return;
+    }
+
+    // Si le roster est valide, on crée un tableau pour afficher les informations des joueurs
     let tableHTML = `
         <table class="roster-table">
             <thead>
