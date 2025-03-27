@@ -152,7 +152,37 @@
                 alert("Tous les champs doivent être remplis !");
                 return;
             }
+async function ajouterRoster() {
+    const nom = document.getElementById("rosterName").value.trim();
+    if (!nom) {
+        alert("Veuillez entrer un nom de roster !");
+        return;
+    }
 
+    console.log("Envoi de la requête avec :", { nom });
+
+    try {
+        const response = await fetch(`${API_URL}/rosters`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nom })
+        });
+
+        const data = await response.json(); // Essaye de lire la réponse JSON
+        console.log("Réponse reçue :", data);
+
+        if (!response.ok) {
+            throw new Error(`Erreur ${response.status}: ${data.message || "Réponse invalide"}`);
+        }
+
+        alert("Roster ajouté avec succès !");
+        document.getElementById("rosterName").value = "";
+        chargerRosters();
+    } catch (error) {
+        alert("❌ Erreur lors de l'ajout du roster : " + error.message);
+        console.error(error);
+    }
+}
             await fetch(`${API_URL}/rosters/${rosterId}/joueurs`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
