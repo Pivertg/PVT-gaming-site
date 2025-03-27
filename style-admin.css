@@ -1,31 +1,108 @@
-/* === Style pour rendre les champs modifiables === */
-.editable {
+/* style-admin.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222;
+    color: white;
+    padding: 15px;
+}
+
+.navbar h1 {
+    margin: 0;
+}
+
+.navbar button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 15px;
     cursor: pointer;
-    background-color: transparent;
-    border: none;
-    color: white;
-    text-align: center;
-    font-size: 16px;
-    width: 100%;
-}
-
-.editable:focus {
-    background-color: #3a3a5e;
-    outline: none;
     border-radius: 5px;
 }
 
-/* === Amélioration du tableau des joueurs === */
-td input {
-    width: 100%;
-    background: transparent;
-    border: none;
+.navbar button:hover {
+    background-color: #cc0000;
+}
+
+.add-roster {
+    margin: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.add-roster input {
+    padding: 8px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.add-roster button {
+    background-color: #4CAF50;
     color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.add-roster button:hover {
+    background-color: #45a049;
+}
+
+.roster-container {
+    margin: 20px;
+}
+
+.roster-card {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.roster-card input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.roster-card table {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+}
+
+.roster-card th, .roster-card td {
+    border: 1px solid #ddd;
+    padding: 8px;
     text-align: center;
 }
 
-td input:focus {
-    background-color: #3a3a5e;
-    outline: none;
+.roster-card th {
+    background-color: #007BFF;
+    color: white;
+}
+
+.add-player button {
+    margin-top: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
     border-radius: 5px;
+}
+
+.add-player button:hover {
+    background-color: #0056b3;
 }
