@@ -24,17 +24,29 @@
 
     <main>
         <h1>Nos Rosters</h1>
-        
+
         <!-- Sélection du roster -->
         <label for="roster-select">Sélectionnez un roster :</label>
         <select id="roster-select">
             <option value="">-- Choisissez un roster --</option>
         </select>
 
-        <!-- Détails du roster sélectionné -->
-        <div id="roster-details">
-            <p>Sélectionnez un roster pour voir les détails.</p>
-        </div>
+        <!-- Tableau des joueurs -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Pseudo</th>
+                    <th>Trophées</th>
+                    <th>Victoires 3v3</th>
+                    <th>Classement classé</th>
+                    <th>Rang max</th>
+                </tr>
+            </thead>
+            <tbody id="roster-table-body">
+                <!-- Les joueurs seront ajoutés ici avec JavaScript -->
+            </tbody>
+        </table>
     </main>
 
     <footer>
@@ -43,6 +55,6 @@
 
     <!-- Scripts -->
     <script src="menu.js"></script>
-    <script src="roster.js"></script> <!-- Script pour charger les rosters depuis l'API -->
+    <script src="roster.js"></script> <!-- Chargement des joueurs -->
 </body>
 </html>
