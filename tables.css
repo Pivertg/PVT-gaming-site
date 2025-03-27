@@ -1,100 +1,36 @@
-/* === Styles spécifiques aux tableaux === */
-
-.table-container {
-    width: 90%;
-    margin: 20px auto;
-    overflow-x: auto;
-}
-
-/* === Tableau général === */
+/* === Tableaux === */
 .roster-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* === En-tête du tableau === */
-.roster-table th {
-    background-color: #27e5a2; /* Vert turquoise */
-    color: #222;
-    padding: 12px;
-    text-align: center;
-    font-size: 16px;
-    text-transform: uppercase;
-}
-
-/* === Contenu du tableau === */
-.roster-table td {
-    background-color: #1a1a1a; /* Noir foncé */
-    color: white;
+.roster-table th, .roster-table td {
+    border: 1px solid #ddd;
     padding: 10px;
     text-align: center;
-    font-size: 14px;
-    border-bottom: 1px solid #444;
 }
 
-/* === Alternance des couleurs pour les lignes === */
-.roster-table tr:nth-child(even) {
-    background-color: #222;
-}
-
-/* === Effet au survol === */
-.roster-table tr:hover {
-    background-color: #27e5a2;
-    color: #222;
-    transition: 0.3s ease-in-out;
-}
-
-/* === Centrage du texte et des icônes === */
-.roster-table th, .roster-table td {
-    vertical-align: middle;
-}
-
-/* === Style des images des joueurs === */
-.player-img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 2px solid #27e5a2;
-}
-
-/* === Bouton pour les détails ou autres actions === */
-.btn-table {
-    display: inline-block;
-    padding: 8px 12px;
-    background-color: #27e5a2;
-    color: #222;
+.roster-table th {
+    background-color: #333;
+    color: white;
     font-weight: bold;
+}
+
+.roster-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.roster-table tr:hover {
+    background-color: #ddd;
+}
+
+.roster-table td {
+    background-color: #222;
+    color: white;
+}
+
+/* Optionnel : Ajout d'une petite bordure arrondie pour chaque cellule */
+.roster-table th, .roster-table td {
     border-radius: 5px;
-    text-decoration: none;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.btn-table:hover {
-    background-color: #1cc28b;
-}
-
-/* === Responsive Design === */
-@media (max-width: 768px) {
-    .table-container {
-        width: 100%;
-        overflow-x: scroll;
-    }
-    
-    .roster-table {
-        font-size: 12px;
-    }
-    
-    .roster-table th,
-    .roster-table td {
-        padding: 8px;
-    }
-    
-    .player-img {
-        width: 40px;
-        height: 40px;
-    }
 }
