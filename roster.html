@@ -30,16 +30,17 @@
         <label for="roster-select">Sélectionnez un roster :</label>
         <select id="roster-select">
             <option value="">-- Choisissez un roster --</option>
-            <option value="Roster 1">Roster 1</option>
-            <option value="Roster 2">Roster 2</option>
-            <option value="Roster 3">Roster 3</option>
+            <!-- Ajouter les options de rosters ici -->
+            <option value="roster1">Roster 1</option>
+            <option value="roster2">Roster 2</option>
+            <option value="roster3">Roster 3</option>
         </select>
 
         <!-- Détails du roster sélectionné -->
         <div id="roster-details">
             <p>Sélectionnez un roster pour voir les détails.</p>
 
-            <!-- Tableau généré dynamiquement -->
+            <!-- Tableau des joueurs du roster sélectionné -->
             <table class="roster-table">
                 <thead>
                     <tr>
@@ -51,7 +52,7 @@
                         <th>Rang Max</th>
                     </tr>
                 </thead>
-                <tbody id="roster-body">
+                <tbody>
                     <!-- Les joueurs seront affichés ici dynamiquement avec JavaScript -->
                 </tbody>
             </table>
@@ -64,6 +65,6 @@
 
     <!-- Scripts -->
     <script src="menu.js"></script>
-    <script src="roster.js"></script> <!-- Gestion des rosters -->
+    <script src="roster.js"></script> <!-- Script pour charger les rosters -->
 </body>
 </html>
