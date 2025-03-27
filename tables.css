@@ -1,4 +1,4 @@
-/* === Styles des tableaux === */
+/* === Styles spécifiques aux tableaux === */
 
 .table-container {
     width: 90%;
@@ -6,7 +6,7 @@
     overflow-x: auto;
 }
 
-/* Tableau général */
+/* === Tableau général === */
 .roster-table {
     width: 100%;
     border-collapse: collapse;
@@ -16,7 +16,7 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* En-tête du tableau */
+/* === En-tête du tableau === */
 .roster-table th {
     background-color: #27e5a2; /* Vert turquoise */
     color: #222;
@@ -26,7 +26,7 @@
     text-transform: uppercase;
 }
 
-/* Contenu du tableau */
+/* === Contenu du tableau === */
 .roster-table td {
     background-color: #1a1a1a; /* Noir foncé */
     color: white;
@@ -36,24 +36,24 @@
     border-bottom: 1px solid #444;
 }
 
-/* Alternance des couleurs pour les lignes */
+/* === Alternance des couleurs pour les lignes === */
 .roster-table tr:nth-child(even) {
     background-color: #222;
 }
 
-/* Effet au survol */
+/* === Effet au survol === */
 .roster-table tr:hover {
     background-color: #27e5a2;
     color: #222;
     transition: 0.3s ease-in-out;
 }
 
-/* Centrage des icônes */
+/* === Centrage du texte et des icônes === */
 .roster-table th, .roster-table td {
     vertical-align: middle;
 }
 
-/* Style des images de joueurs */
+/* === Style des images des joueurs === */
 .player-img {
     width: 50px;
     height: 50px;
@@ -61,7 +61,23 @@
     border: 2px solid #27e5a2;
 }
 
-/* Responsive */
+/* === Bouton pour les détails ou autres actions === */
+.btn-table {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #27e5a2;
+    color: #222;
+    font-weight: bold;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn-table:hover {
+    background-color: #1cc28b;
+}
+
+/* === Responsive Design === */
 @media (max-width: 768px) {
     .table-container {
         width: 100%;
@@ -70,5 +86,15 @@
     
     .roster-table {
         font-size: 12px;
+    }
+    
+    .roster-table th,
+    .roster-table td {
+        padding: 8px;
+    }
+    
+    .player-img {
+        width: 40px;
+        height: 40px;
     }
 }
