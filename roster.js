@@ -1,57 +1,73 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const rosterSelect = document.getElementById("roster-select");
+    const rosterDetails = document.getElementById("roster-details");
+
+    if (!rosterDetails || !rosterSelect) {
+        console.error("Erreur : L'élément #roster-details ou #roster-select est introuvable !");
+        return;
+    }
+
+    // === DONNÉES MANUELLES (Tu peux modifier ici) ===
     const rosters = {
-        "Roster Alpha": [
-            { nom: "Thomas", pseudo: "DarkWarrior", trophees: 18000, win3v3: 320, classement: "Or II", rangMax: 25 },
-            { nom: "Lucas", pseudo: "ShadowSniper", trophees: 21000, win3v3: 500, classement: "Diamant I", rangMax: 30 },
-            { nom: "Emma", pseudo: "QueenBee", trophees: 19500, win3v3: 420, classement: "Platine III", rangMax: 28 }
+        "Roster 1": [
+            { name: "John Doe", pseudo: "johnny", trophées: 10, win3v3: 15, classement: "Plat 1", rangMax: "Gold" },
+            { name: "Jane Smith", pseudo: "janey", trophées: 8, win3v3: 12, classement: "Gold 2", rangMax: "Silver" },
+            { name: "Jack Black", pseudo: "jackyB", trophées: 9, win3v3: 13, classement: "Silver 1", rangMax: "Bronze" }
         ],
-        "Roster Bravo": [
-            { nom: "Nathan", pseudo: "StormBreaker", trophees: 22000, win3v3: 600, classement: "Maître I", rangMax: 35 },
-            { nom: "Léo", pseudo: "FirePhoenix", trophees: 17000, win3v3: 280, classement: "Or III", rangMax: 24 },
-            { nom: "Alice", pseudo: "MoonLight", trophees: 20000, win3v3: 450, classement: "Platine II", rangMax: 27 }
+        "Roster 2": [
+            { name: "Max Power", pseudo: "maxp", trophées: 12, win3v3: 20, classement: "Diamond", rangMax: "Plat" },
+            { name: "Sara White", pseudo: "saraW", trophées: 11, win3v3: 18, classement: "Plat 3", rangMax: "Gold" }
         ],
-        "Roster Charlie": [
-            { nom: "Ethan", pseudo: "ThunderStrike", trophees: 24000, win3v3: 700, classement: "Maître II", rangMax: 38 },
-            { nom: "Mia", pseudo: "NightOwl", trophees: 19000, win3v3: 400, classement: "Platine I", rangMax: 26 },
-            { nom: "Sacha", pseudo: "IronFist", trophees: 20500, win3v3: 480, classement: "Diamant II", rangMax: 30 },
-            { nom: "Zoé", pseudo: "ShadowCat", trophees: 18000, win3v3: 350, classement: "Or II", rangMax: 25 }
+        "Roster 3": [
+            { name: "Tom Speed", pseudo: "speedyT", trophées: 14, win3v3: 22, classement: "Champ", rangMax: "Diamond" },
+            { name: "Elise Thunder", pseudo: "eliseT", trophées: 13, win3v3: 19, classement: "Diamond", rangMax: "Plat" }
         ]
     };
 
-    const rosterSelect = document.getElementById("roster-select");
-    const tableBody = document.getElementById("roster-table-body");
-
-    // Remplir la liste déroulante avec les noms des rosters
-    Object.keys(rosters).forEach(rosterName => {
-        const option = document.createElement("option");
-        option.value = rosterName;
-        option.textContent = rosterName;
-        rosterSelect.appendChild(option);
-    });
-
-    // Fonction pour afficher les joueurs du roster sélectionné
+    // === AFFICHER LE ROSTER SÉLECTIONNÉ ===
     function displayRoster(rosterName) {
-        tableBody.innerHTML = ""; // Effacer le tableau
+        if (!rosters[rosterName]) {
+            rosterDetails.innerHTML = "<p>Aucune donnée pour ce roster.</p>";
+            return;
+        }
 
-        if (rosters[rosterName]) {
-            rosters[rosterName].forEach(player => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${player.nom}</td>
+        let tableHTML = `
+            <table class="roster-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Pseudo</th>
+                        <th>Trophées</th>
+                        <th>Win 3v3</th>
+                        <th>Classement</th>
+                        <th>Rang Max</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        rosters[rosterName].forEach(player => {
+            tableHTML += `
+                <tr>
+                    <td>${player.name}</td>
                     <td>${player.pseudo}</td>
-                    <td>${player.trophees}</td>
+                    <td>${player.trophées}</td>
                     <td>${player.win3v3}</td>
                     <td>${player.classement}</td>
                     <td>${player.rangMax}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
+                </tr>
+            `;
+        });
+
+        tableHTML += "</tbody></table>";
+        rosterDetails.innerHTML = tableHTML;
     }
 
-    // Changer le tableau lorsqu'un roster est sélectionné
+    // === ÉCOUTER LE CHANGEMENT DE SÉLECTION ===
     rosterSelect.addEventListener("change", function () {
-        const selectedRoster = this.value;
-        displayRoster(selectedRoster);
+        displayRoster(this.value);
     });
+
+    // === AFFICHER UN MESSAGE PAR DÉFAUT ===
+    rosterDetails.innerHTML = "<p>Sélectionnez un roster pour voir les détails.</p>";
 });
