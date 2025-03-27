@@ -6,13 +6,11 @@ document.addEventListener("DOMContentLoaded", function () {
 function displayRoster() {
     let details = document.getElementById("roster-details");
 
-    // Vérification si l'élément existe
     if (!details) {
         console.error("Erreur : L'élément #roster-details est introuvable.");
         return;
     }
 
-    // Données des rosters (à modifier selon tes besoins)
     const rosters = {
         "roster1": [
             { nom: "John Doe", pseudo: "johnny", trophees: 10, win3v3: 15, classement: "Plat 1", rangMax: "Gold" },
@@ -27,26 +25,23 @@ function displayRoster() {
         ]
     };
 
-    // Récupérer la sélection
     let selectedRoster = document.getElementById("roster-select").value;
 
-    // Vérifier si un roster a été choisi
     if (!selectedRoster || !rosters[selectedRoster]) {
         details.innerHTML = "<p>Sélectionnez un roster pour voir les détails.</p>";
         return;
     }
 
-    // Construire l'affichage des joueurs sous forme de cartes
     let content = `<div class="roster-cards">`;
     rosters[selectedRoster].forEach(player => {
         content += `
             <div class="card">
                 <div class="card__content">
                     <h3>${player.nom} (${player.pseudo})</h3>
-                    <p>Trophées: ${player.trophees}</p>
-                    <p>Win 3v3: ${player.win3v3}</p>
-                    <p>Classement: ${player.classement}</p>
-                    <p>Rang Max: ${player.rangMax}</p>
+                    <p><strong>Trophées :</strong> ${player.trophees}</p>
+                    <p><strong>Win 3v3 :</strong> ${player.win3v3}</p>
+                    <p><strong>Classement :</strong> ${player.classement}</p>
+                    <p><strong>Rang Max :</strong> ${player.rangMax}</p>
                 </div>
             </div>
         `;
