@@ -1,38 +1,43 @@
-/* Styles des tableaux */
-.roster-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+/* Conteneur des cartes affichées en mode tableau */
+.roster-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    padding: 20px;
+    background: #5B42F3; /* Fond autour des cartes */
+    border-radius: 10px;
 }
 
-.roster-table th, .roster-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-}
-
-.roster-table th {
-    background-color: #5B42F3;
-    color: white;
-}
-
-.roster-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-/* From Uiverse.io by adamgiebl */
+/* Styles des cartes */
 .card {
-  width: 190px;
-  height: 254px;
-  border-radius: 20px;
-  padding: 5px;
-  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
-  background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB);
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: rgba(151, 65, 252, 0.4) 0 10px 25px;
+    background-image: linear-gradient(144deg, #AF40FF, #5B42F3 50%, #00DDEB);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .card__content {
-  background: rgb(5, 6, 45);
-  border-radius: 17px;
-  width: 100%;
-  height: 100%;
+    background: rgb(5, 6, 45);
+    border-radius: 10px;
+    width: 100%;
+    padding: 15px;
+    text-align: center;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.card p {
+    margin: 5px 0;
+    font-size: 0.9em;
 }
