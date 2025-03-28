@@ -47,4 +47,3 @@ function displayRoster() {
 
     details.innerHTML = content;
 }
-s
