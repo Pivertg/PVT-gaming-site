@@ -1,43 +1,126 @@
-/* Conteneur des cartes affichées en mode tableau */
-.roster-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
-    padding: 20px;
-    background: #5B42F3; /* Fond autour des cartes */
-    border-radius: 10px;
-}
-
-/* Styles des cartes */
+/* From Uiverse.io by javierBarroso */
 .card {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    border-radius: 15px;
-    padding: 10px;
-    box-shadow: rgba(151, 65, 252, 0.4) 0 10px 25px;
-    background-image: linear-gradient(144deg, #AF40FF, #5B42F3 50%, #00DDEB);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 190px;
+  height: 254px;
+  background: #171717;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 0px 3px 1px #00000088;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
 }
 
-.card__content {
-    background: rgb(5, 6, 45);
-    border-radius: 10px;
-    width: 100%;
-    padding: 15px;
-    text-align: center;
-    color: white;
-    font-family: Arial, sans-serif;
+.card .content {
+  border-radius: 10px;
+  background: #171717;
+  width: 186px;
+  height: 250px;
+  z-index: 1;
+  padding: 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
 }
 
-.card h3 {
-    margin: 0;
-    font-size: 1.2em;
+.content::before {
+  opacity: 0;
+  transition: opacity 300ms;
+  content: " ";
+  display: block;
+  background: #fff5;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  filter: blur(50px);
 }
 
-.card p {
-    margin: 5px 0;
-    font-size: 0.9em;
+.card:hover .content::before {
+  opacity: 1;
+}
+
+.card::before {
+  opacity: 1;
+  content: "";
+  position: absolute;
+  display: block;
+  width: 120px;
+  height: 300px;
+  transform: rotate(0deg) translateY(50%);
+  background: linear-gradient(90deg, #ff2288, transparent);
+  transition: opacity 300ms;
+  animation: rotation_9018 3000ms infinite linear;
+  animation-play-state: paused;
+}
+.card::after {
+  opacity: 1;
+  content: "";
+  position: absolute;
+  display: block;
+  width: 120px;
+  height: 300px;
+  transform: rotate(0deg) translateY(-50%);
+  background: linear-gradient(90deg, transparent, #2268ff);
+  transition: opacity 300ms;
+  animation: rotation_9019 3000ms infinite linear;
+  animation-play-state: paused;
+}
+
+.card:hover::before {
+  opacity: 1;
+  animation-play-state: running;
+}
+.card:hover::after {
+  opacity: 1;
+  animation-play-state: running;
+}
+
+.card:hover .glass {
+  opacity: 0;
+}
+
+.glass {
+  position: absolute;
+  content: "";
+  display: block;
+  width: 190px;
+  height: 254px;
+  background: #17171733;
+  backdrop-filter: blur(50px);
+  z-index: 1;
+  transition-duration: 0.5s;
+}
+
+@keyframes rotation_9018 {
+  0% {
+    transform: rotate(0deg) translateY(50%);
+  }
+
+  100% {
+    transform: rotate(360deg) translateY(50%);
+  }
+}
+@keyframes rotation_9019 {
+  0% {
+    transform: rotate(0deg) translateY(-50%);
+  }
+
+  100% {
+    transform: rotate(360deg) translateY(-50%);
+  }
+}
+
+/* Organisation des cartes */
+.roster-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
 }
