@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
     const rosterSelect = document.getElementById("roster-select");
     rosterSelect.addEventListener("change", displayRoster);
+
+    // Affiche le tableau par défaut au chargement de la page
+    displayDefaultTable();
 });
 
 function displayRoster() {
@@ -28,7 +31,7 @@ function displayRoster() {
     let selectedRoster = document.getElementById("roster-select").value;
 
     if (!selectedRoster || !rosters[selectedRoster]) {
-        details.innerHTML = "<p>Sélectionnez un roster pour voir les détails.</p>";
+        displayDefaultTable(); // Affiche le tableau de base si aucun roster n'est choisi
         return;
     }
 
@@ -49,4 +52,43 @@ function displayRoster() {
     content += `</div>`;
 
     details.innerHTML = content;
+}
+
+// Fonction pour afficher un tableau par défaut
+function displayDefaultTable() {
+    let details = document.getElementById("roster-details");
+
+    details.innerHTML = `
+        <p>Sélectionnez un roster pour voir les détails.</p>
+        <table class="roster-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Pseudo</th>
+                    <th>Trophées</th>
+                    <th>Win 3v3</th>
+                    <th>Classement</th>
+                    <th>Rang Max</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>John Doe</td>
+                    <td>johnny</td>
+                    <td>10</td>
+                    <td>15</td>
+                    <td>Plat 1</td>
+                    <td>Gold</td>
+                </tr>
+                <tr>
+                    <td>Jane Smith</td>
+                    <td>janey</td>
+                    <td>8</td>
+                    <td>12</td>
+                    <td>Gold 2</td>
+                    <td>Silver</td>
+                </tr>
+            </tbody>
+        </table>
+    `;
 }
