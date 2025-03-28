@@ -1,3 +1,33 @@
+document.addEventListener("DOMContentLoaded", function () {
+    let select = document.getElementById("roster-select");
+
+    if (!select) {
+        console.error("Erreur : L'élément #roster-select est introuvable.");
+        return;
+    }
+
+    select.addEventListener("change", displayRoster);
+
+    // Remplir la liste déroulante dynamiquement
+    const rosters = {
+        "roster1": "Roster 1",
+        "roster2": "Roster 2",
+        "roster3": "Roster 3"
+    };
+
+    select.innerHTML = `<option value="">-- Choisissez un roster --</option>`;
+
+    for (let key in rosters) {
+        let option = document.createElement("option");
+        option.value = key;
+        option.textContent = rosters[key];
+        select.appendChild(option);
+    }
+
+    // Afficher le message par défaut au chargement
+    displayRoster();
+});
+
 function displayRoster() {
     let details = document.getElementById("roster-details");
 
@@ -22,8 +52,9 @@ function displayRoster() {
 
     let selectedRoster = document.getElementById("roster-select").value;
 
+    // Si aucune sélection, afficher un message par défaut
     if (!selectedRoster || !rosters[selectedRoster]) {
-        displayDefaultTable();
+        details.innerHTML = `<p>Veuillez choisir un roster pour voir les joueurs.</p>`;
         return;
     }
 
