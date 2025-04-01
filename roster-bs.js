@@ -39,7 +39,7 @@ function displayRoster() {
         "roster4": [
             { nom: "PVT|nawer", trophees: 83535, win3v3: 12455, classement: "L2", rangMax: "" },
             { nom: "PVT|SCOLDEN",trophees: 72715, win3v3: 6785, classement: "L2", rangMax: "" },
-            { nom: "PVT|RA7", trophees: 95184, win3v3: 9167, classement: "L1", rangMax: "" },
+            { nom: "PVT|RA7", trophees: 95184, win3v3: 9167, classement: "L1", rangMax: "90" },
             { nom: "PVT|firecrow", trophees: 78637, win3v3: 15305, classement: "L1", rangMax: "" }
         ],
         "roster5": [
