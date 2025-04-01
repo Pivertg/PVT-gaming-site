@@ -10,9 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Remplir la liste déroulante dynamiquement
     const rosters = {
-        "roster1": "Roster 1",
         "roster2": "Roster 2",
-        "roster3": "Roster 2",
     };
 
     select.innerHTML = `<option value="">-- Choisissez un roster --</option>`;
