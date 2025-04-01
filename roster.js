@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const rosters = {
         "roster4": "Roster 4",
         "roster5": "Roster 5",
-        "roster3": "Roster 3"
     };
 
     select.innerHTML = `<option value="">-- Choisissez un roster --</option>`;
