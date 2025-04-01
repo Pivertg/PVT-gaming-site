@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Remplir la liste déroulante dynamiquement
     const rosters = {
-        "roster1": "Roster 1",
-        "roster2": "Roster 2",
+        "roster4": "Roster 4",
+        "roster5": "Roster 5",
         "roster3": "Roster 3"
     };
 
@@ -37,15 +37,16 @@ function displayRoster() {
     }
 
     const rosters = {
-        "roster1": [
-            { nom: "John Doe", pseudo: "johnny", trophees: 10, win3v3: 15, classement: "Plat 1", rangMax: "Gold" },
-            { nom: "Jane Smith", pseudo: "janey", trophees: 8, win3v3: 12, classement: "Gold 2", rangMax: "Silver" },
-            { nom: "Jane Smith", pseudo: "janey", trophees: 8, win3v3: 12, classement: "Gold 2", rangMax: "Silver" }
+        "roster4": [
+            { nom: "PVT|nawer", trophees: 83535, win3v3: 12455, classement: "L2", rangMax: "" },
+            { nom: "PVT|SCOLDEN",trophees: 72715, win3v3: 6785, classement: "L2", rangMax: "" },
+            { nom: "PVT|RA7", trophees: 95184, win3v3: 9167, classement: "L1", rangMax: "" },
+            { nom: "PVT|firecrow", trophees: 78637, win3v3: 15305, classement: "L1", rangMax: "" }
         ],
-        "roster2": [
-            { nom: "Alice", pseudo: "alice99", trophees: 20, win3v3: 25, classement: "Diamond", rangMax: "Plat" },
-            { nom: "Bob", pseudo: "bobby", trophees: 18, win3v3: 22, classement: "Gold", rangMax: "Silver" },
-            { nom: "Jane Smith", pseudo: "janey", trophees: 8, win3v3: 12, classement: "Gold 2", rangMax: "Silver" }
+        "roster5": [
+            { nom: "PVT|KAIZO", trophees: 78347, win3v3: 19445, classement: "L2", rangMax: "" },
+            { nom: "PVT|TAIZO", trophees: 82711, win3v3: 16491, classement: "L2", rangMax: "" },
+            { nom: "PVT|Alone", trophees: 76751, win3v3: 19981, classement: "L3", rangMax: "" }
         ],
         "roster3": [
             { nom: "Charlie", pseudo: "charlieX", trophees: 12, win3v3: 18, classement: "Plat", rangMax: "Gold" },
