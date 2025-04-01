@@ -10,8 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Remplir la liste déroulante dynamiquement
     const rosters = {
-        "roster4": "Roster 4",
-        "roster5": "Roster 5",
+        "roster1": "Roster 1",
+        "roster2": "Roster 2",
+        "roster3": "Roster 2",
     };
 
     select.innerHTML = `<option value="">-- Choisissez un roster --</option>`;
@@ -36,21 +37,20 @@ function displayRoster() {
     }
 
     const rosters = {
-        "roster4": [
-            { nom: "PVT|nawer", trophees: 83535, win3v3: 12455, classement: "L2", rangMax: "" },
-            { nom: "PVT|SCOLDEN",trophees: 72715, win3v3: 6785, classement: "L2", rangMax: "" },
-            { nom: "PVT|RA7", trophees: 95184, win3v3: 9167, classement: "L1", rangMax: "" },
-            { nom: "PVT|firecrow", trophees: 78637, win3v3: 15305, classement: "L1", rangMax: "" }
+        "roster1": [
+            { nom: "PVT|nawer", classement: "L2"},
+            { nom: "PVT|nawer", classement: "L2" },
+            { nom: "PVT|nawer", classement: "L2" },
         ],
-        "roster5": [
-            { nom: "PVT|KAIZO", trophees: 78347, win3v3: 19445, classement: "L2", rangMax: "" },
-            { nom: "PVT|TAIZO", trophees: 82711, win3v3: 16491, classement: "L2", rangMax: "" },
-            { nom: "PVT|Alone", trophees: 76751, win3v3: 19981, classement: "L3", rangMax: "" }
+        "roster2": [
+            { nom: "PVT|SKIBIDI ZIZOU", classement: "GC2", },
+            { nom: "PVT|Crazy coca", classement: "GC2", },
+            { nom: "PVT|Zenotoa", classement: "GC2", }
         ],
         "roster3": [
-            { nom: "Charlie", pseudo: "charlieX", trophees: 12, win3v3: 18, classement: "Plat", rangMax: "Gold" },
-            { nom: "Jane Smith", pseudo: "janey", trophees: 8, win3v3: 12, classement: "Gold 2", rangMax: "Silver" },
-            { nom: "Jane Smith", pseudo: "janey", trophees: 8, win3v3: 12, classement: "Gold 2", rangMax: "Silver" }
+            { nom: "PVT|nawer", classement: "L2", },
+            { nom: "PVT|nawer", classement: "L2", },
+            { nom: "PVT|nawer", classement: "L2", }
         ]
     };
 
@@ -69,10 +69,7 @@ function displayRoster() {
                 <span class="glass"></span>
                 <div class="content">
                     <h3>${player.nom}</h3>
-                    <p><strong>Trophées :</strong> ${player.trophees}</p>
-                    <p><strong>Win 3v3 :</strong> ${player.win3v3}</p>
                     <p><strong>Classement :</strong> ${player.classement}</p>
-                    <p><strong>Rang Max :</strong> ${player.rangMax}</p>
                 </div>
             </div>
         `;
