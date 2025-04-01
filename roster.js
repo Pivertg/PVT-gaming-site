@@ -70,7 +70,6 @@ function displayRoster() {
                 <span class="glass"></span>
                 <div class="content">
                     <h3>${player.nom}</h3>
-                    <p><strong>Pseudo :</strong> ${player.pseudo}</p>
                     <p><strong>Trophées :</strong> ${player.trophees}</p>
                     <p><strong>Win 3v3 :</strong> ${player.win3v3}</p>
                     <p><strong>Classement :</strong> ${player.classement}</p>
