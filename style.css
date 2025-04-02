@@ -1,4 +1,4 @@
-/* === Réinitialisation et Styles de base === */
+</* === Réinitialisation et Styles de base === */
 * {
     margin: 0;
     padding: 0;
@@ -423,9 +423,12 @@ footer {
     transition: 0.3s;
 }
 
-.social-links a:hover {
-    background-color: #1cc28b;
+.social-links {
+    background: none !important;
+    box-shadow: none !important;
+    border: none !important;
 }
+
 
 .roster-table {
     width: 100%;
