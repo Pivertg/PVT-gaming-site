@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Remplir la liste déroulante dynamiquement
     const rosters = {
+        "roster1": "Roster 1",
         "roster2": "Roster 2",
     };
 
@@ -36,9 +37,9 @@ function displayRoster() {
 
     const rosters = {
         "roster1": [
-            { nom: "PVT|nawer", classement: "L2"},
-            { nom: "PVT|nawer", classement: "L2" },
-            { nom: "PVT|nawer", classement: "L2" },
+            { nom: "PVT|RA7_EX", classement: "GC2"},
+            { nom: "PVT|Lsko.", classement: "GC2" },
+            { nom: "PVT|???", classement: "???" },
         ],
         "roster2": [
             { nom: "PVT|SKIBIDI ZIZOU", classement: "GC2", },
