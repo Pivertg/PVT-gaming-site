@@ -53,7 +53,7 @@
   width: 120px;
   height: 300px;
   transform: rotate(0deg) translateY(50%);
-  background: linear-gradient(90deg, #ff2288, transparent);
+  background: linear-gradient(90deg, #38ff22, transparent);
   transition: opacity 300ms;
   animation: rotation_9018 3000ms infinite linear;
   animation-play-state: paused;
@@ -66,7 +66,7 @@
   width: 120px;
   height: 300px;
   transform: rotate(0deg) translateY(-50%);
-  background: linear-gradient(90deg, transparent, #2268ff);
+  background: linear-gradient(90deg, transparent, #ab6209);
   transition: opacity 300ms;
   animation: rotation_9019 3000ms infinite linear;
   animation-play-state: paused;
