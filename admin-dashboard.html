@@ -1,126 +1,86 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="style-admin.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tableau de bord Admin</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.6.2/fetch.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .form-container {
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
 </head>
-<script>
-    const API_URL = "https://pvt-gaming-api.gamingpivert.workers.dev/api/joueurs";
-    const BRAWL_STARS_API = "https://api.brawlstars.com/v1";  // Remplace avec l'URL correcte pour l'API Brawl Stars
-
-    // Vérifie si l'administrateur est bien authentifié
-    if (sessionStorage.getItem("adminToken") !== "adminLoggedIn") {
-        alert("❌ Accès refusé ! Veuillez vous connecter.");
-        window.location.href = "admin.html"; // Redirige vers la page de connexion
-    }
-
-    function logout() {
-        sessionStorage.removeItem("adminToken"); // Supprime la session active
-        alert("👋 Déconnexion réussie !");
-        window.location.href = "admin.html"; // Redirige vers la page de connexion
-    }
-</script>
 <body>
+  <div class="form-container">
+    <h2>Ajouter un Joueur</h2>
+    <form id="form-ajouter-joueur">
+      <label for="pseudo">Pseudo :</label>
+      <input type="text" id="pseudo" name="pseudo" required>
 
-    <div class="navbar">
-        <h1>Dashboard</h1>
-        <button onclick="logout()">🚪 Se déconnecter</button>
-    </div>
+      <label for="brawlTag">Tag Brawl Stars :</label>
+      <input type="text" id="brawlTag" name="brawlTag" required>
 
-    <div class="add-roster">
-        <input type="text" id="rosterName" placeholder="Nom du roster">
-        <button onclick="ajouterRoster()">Ajouter Roster</button>
-    </div>
+      <button type="submit">Ajouter le Joueur</button>
+    </form>
+  </div>
 
-    <div class="roster-container" id="rosterList"></div>
+  <script>
+    const API_URL = "https://ton-api-url/api/joueurs"; // Remplace par l'URL de ton API
 
-    <script>
-        async function chargerRosters() {
-            const response = await fetch(`${API_URL}`);
-            const rosters = await response.json();
-            const rosterList = document.getElementById("rosterList");
-            rosterList.innerHTML = "";
+    document.getElementById("form-ajouter-joueur").addEventListener("submit", async function(event) {
+      event.preventDefault();
+      
+      const pseudo = document.getElementById("pseudo").value;
+      const brawlTag = document.getElementById("brawlTag").value;
 
-            rosters.forEach(roster => {
-                const div = document.createElement("div");
-                div.classList.add("roster-card");
-                div.innerHTML = `
-                    <input type="text" class="editable" value="${roster.nom}" onblur="modifierRoster(${roster.id}, this.value)">
-                    <button onclick="supprimerRoster(${roster.id})">❌ Supprimer</button>
+      const joueurData = {
+        pseudo,
+        brawlTag
+      };
 
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Pseudo</th>
-                                <th>🏆 Trophées</th>
-                                <th>🏅 Win 3V3</th>
-                                <th>📊 Classé</th>
-                                <th>🔝 Rang Max</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="joueurs-${roster.id}">
-                        </tbody>
-                    </table>
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(joueurData)
+        });
 
-                    <div class="add-player">
-                        <button onclick="ajouterJoueur(${roster.id})">+ Ajouter un joueur</button>
-                    </div>
-                `;
-
-                rosterList.appendChild(div);
-                afficherJoueurs(roster.id);
-            });
+        if (!response.ok) {
+          throw new Error(`Erreur: ${response.statusText}`);
         }
 
-        async function ajouterJoueur(rosterId) {
-            const tag = prompt("Entrez le tag Brawl Stars du joueur (par exemple : 'P8PPLR2')").trim();
-            if (!tag) {
-                alert("Le tag du joueur ne peut pas être vide !");
-                return;
-            }
-
-            const joueur = await recupererInfoBrawlStars(tag);
-            if (joueur) {
-                await fetch(`${API_URL}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        pseudo: joueur.name,
-                        trophées: joueur.trophies,
-                        win3v3: joueur.wins,
-                        classement: joueur.rank,
-                        rangMax: joueur.maxRank,
-                        rosterId: rosterId
-                    })
-                });
-                chargerRosters(); // Recharge la liste des rosters avec le joueur ajouté
-            }
-        }
-
-        async function recupererInfoBrawlStars(tag) {
-            try {
-                const response = await fetch(`${BRAWL_STARS_API}/players/${tag}`);
-                if (!response.ok) throw new Error("Erreur API Brawl Stars");
-                const data = await response.json();
-                return {
-                    name: data.name,
-                    trophies: data.trophies,
-                    wins: data.wins,
-                    rank: data.rank,
-                    maxRank: data.maxRank
-                };
-            } catch (error) {
-                alert("❌ Impossible de récupérer les informations Brawl Stars");
-                console.error(error);
-                return null;
-            }
-        }
-
-        chargerRosters(); // Charger la liste des rosters à chaque initialisation de la page
-    </script>
-
+        alert("Joueur ajouté avec succès !");
+        document.getElementById("form-ajouter-joueur").reset();
+      } catch (error) {
+        alert("Erreur lors de l'ajout du joueur: " + error.message);
+      }
+    });
+  </script>
 </body>
 </html>
