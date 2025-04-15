@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tableau de bord Admin</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.6.2/fetch.min.js"></script>
-  <link rel="stylesheet" href="style-admin.css"> <!-- Si tu as déjà un fichier CSS, l'importer ici -->
+  <link rel="stylesheet" href="style-admin.css">
 </head>
 <body>
   <div class="form-container">
@@ -30,7 +30,7 @@
     </form>
   </div>
 
-  <h2>Liste des Roster</h2>
+  <h2>Liste des Rosters</h2>
   <table id="rosterTable">
     <thead>
       <tr>
@@ -44,7 +44,7 @@
   </table>
 
   <script>
-    const API_URL = "https://pvt-gaming-api.gamingpivert.workers.dev/api"; // Remplace par l'URL de ton API
+    const API_URL = "https://pvt-gaming-api.gamingpivert.workers.dev/api";
     let currentRosterId = null;
 
     document.getElementById("form-creer-roster").addEventListener("submit", async function(event) {
@@ -67,7 +67,7 @@
 
         alert("Roster créé avec succès !");
         document.getElementById("form-creer-roster").reset();
-        loadRosters();  // Recharger la liste des rosters
+        loadRosters();
       } catch (error) {
         alert("Erreur lors de la création du roster: " + error.message);
       }
@@ -77,8 +77,6 @@
       const response = await fetch(`${API_URL}/rosters`);
       const rosters = await response.json();
       const rosterTableBody = document.getElementById("rosterTable").getElementsByTagName("tbody")[0];
-
-      // Vider le tableau avant de le remplir
       rosterTableBody.innerHTML = '';
 
       rosters.forEach(roster => {
@@ -86,15 +84,15 @@
         row.innerHTML = `
           <td>${roster.name}</td>
           <td>
-            <button onclick="viewRoster('${roster.id}')">Voir les joueurs</button>
-            <button onclick="deleteRoster('${roster.id}')">Supprimer</button>
+            <button onclick="viewRoster('${roster.name}')">Ajouter joueur</button>
+            <button onclick="deleteRoster('${roster.name}')">Supprimer</button>
           </td>
         `;
       });
     }
 
-    async function viewRoster(rosterId) {
-      currentRosterId = rosterId;
+    function viewRoster(rosterName) {
+      currentRosterId = rosterName;
       document.getElementById("form-ajouter-joueur-container").style.display = "block";
       document.getElementById("form-ajouter-joueur").reset();
     }
@@ -111,7 +109,7 @@
       };
 
       try {
-        const response = await fetch(`${API_URL}/rosters/${currentRosterId}/joueurs`, {
+        const response = await fetch(`${API_URL}/rosters/${encodeURIComponent(currentRosterId)}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -130,9 +128,9 @@
       }
     });
 
-    async function deleteRoster(rosterId) {
+    async function deleteRoster(rosterName) {
       try {
-        const response = await fetch(`${API_URL}/rosters/${rosterId}`, {
+        const response = await fetch(`${API_URL}/rosters/${encodeURIComponent(rosterName)}`, {
           method: "DELETE"
         });
 
@@ -141,13 +139,12 @@
         }
 
         alert("Roster supprimé avec succès !");
-        loadRosters();  // Recharger la liste des rosters
+        loadRosters();
       } catch (error) {
         alert("Erreur lors de la suppression du roster: " + error.message);
       }
     }
 
-    // Charger les rosters au démarrage
     loadRosters();
   </script>
 </body>
