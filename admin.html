@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin - Connexion</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <script>
+    // Supprime toute session précédente dès l'arrivée sur la page de connexion
+    sessionStorage.removeItem("adminToken");
+  </script>
+
   <header>
     <div class="logo">PVT|Gaming - Admin</div>
   </header>
@@ -32,25 +38,18 @@
           <label for="admin-pseudo">👤 Pseudo</label>
           <input type="text" id="admin-pseudo" required>
         </div>
+
         <div class="input-group">
           <label for="admin-password">🔒 Mot de passe</label>
           <input type="password" id="admin-password" required>
         </div>
+
         <button type="submit" class="btn">🚀 Se connecter</button>
       </form>
     </div>
   </main>
 
   <script>
-    // Attendre le chargement du DOM pour éviter boucle
-    window.addEventListener("DOMContentLoaded", () => {
-      if (sessionStorage.getItem("adminToken") === "adminLoggedIn") {
-        setTimeout(() => {
-          window.location.href = "admin-dashboard.html";
-        }, 800); // Redirection retardée pour éviter bug
-      }
-    });
-
     document.getElementById("admin-login-form").addEventListener("submit", function (event) {
       event.preventDefault();
 
