@@ -36,8 +36,11 @@
 </head>
 <body>
   <div class="form-container">
-    <h2>Ajouter un Joueur</h2>
+    <h2>Ajouter un Joueur à un Roster</h2>
     <form id="form-ajouter-joueur">
+      <label for="rosterId">ID du Roster :</label>
+      <input type="text" id="rosterId" name="rosterId" required>
+
       <label for="pseudo">Pseudo :</label>
       <input type="text" id="pseudo" name="pseudo" required>
 
@@ -49,21 +52,23 @@
   </div>
 
   <script>
-    const API_URL = "https://ton-api-url/api/joueurs"; // Remplace par l'URL de ton API
+    const API_URL = "https://pvt-gaming-api.gamingpivert.workers.dev/api/rosters"; // Remplace par l'URL de ton API
 
     document.getElementById("form-ajouter-joueur").addEventListener("submit", async function(event) {
       event.preventDefault();
       
+      const rosterId = document.getElementById("rosterId").value;
       const pseudo = document.getElementById("pseudo").value;
       const brawlTag = document.getElementById("brawlTag").value;
 
       const joueurData = {
+        id: `joueur-${Date.now()}`, // Générer un ID unique pour le joueur (à ajuster selon ton besoin)
         pseudo,
         brawlTag
       };
 
       try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(`${API_URL}/${rosterId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -75,7 +80,7 @@
           throw new Error(`Erreur: ${response.statusText}`);
         }
 
-        alert("Joueur ajouté avec succès !");
+        alert("Joueur ajouté avec succès au roster !");
         document.getElementById("form-ajouter-joueur").reset();
       } catch (error) {
         alert("Erreur lors de l'ajout du joueur: " + error.message);
