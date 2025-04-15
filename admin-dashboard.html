@@ -84,15 +84,15 @@
         row.innerHTML = `
           <td>${roster.name}</td>
           <td>
-            <button onclick="viewRoster('${roster.name}')">Ajouter joueur</button>
-            <button onclick="deleteRoster('${roster.name}')">Supprimer</button>
+            <button onclick="viewRoster('${roster.id}')">Ajouter joueur</button>
+            <button onclick="deleteRoster('${roster.id}')">Supprimer</button>
           </td>
         `;
       });
     }
 
-    function viewRoster(rosterName) {
-      currentRosterId = rosterName;
+    function viewRoster(rosterId) {
+      currentRosterId = rosterId;
       document.getElementById("form-ajouter-joueur-container").style.display = "block";
       document.getElementById("form-ajouter-joueur").reset();
     }
@@ -128,9 +128,9 @@
       }
     });
 
-    async function deleteRoster(rosterName) {
+    async function deleteRoster(rosterId) {
       try {
-        const response = await fetch(`${API_URL}/rosters/${encodeURIComponent(rosterName)}`, {
+        const response = await fetch(`${API_URL}/rosters/${encodeURIComponent(rosterId)}`, {
           method: "DELETE"
         });
 
