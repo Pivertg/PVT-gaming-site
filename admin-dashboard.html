@@ -109,7 +109,7 @@
       };
 
       try {
-        const response = await fetch(`${API_URL}/rosters/${encodeURIComponent(currentRosterId)}`, {
+        const response = await fetch(`${API_URL}/rosters/${encodeURIComponent(currentRosterId)}/joueurs`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
