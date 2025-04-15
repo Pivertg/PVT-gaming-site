@@ -5,42 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tableau de bord Admin</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.6.2/fetch.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-    .form-container {
-      max-width: 400px;
-      margin: 20px auto;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      background-color: #f9f9f9;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button {
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css"> <!-- Si tu as déjà un fichier CSS, l'importer ici -->
 </head>
 <body>
   <div class="form-container">
-    <h2>Ajouter un Joueur à un Roster</h2>
+    <h2>Ajouter un Joueur</h2>
     <form id="form-ajouter-joueur">
-      <label for="rosterId">ID du Roster :</label>
-      <input type="text" id="rosterId" name="rosterId" required>
-
       <label for="pseudo">Pseudo :</label>
       <input type="text" id="pseudo" name="pseudo" required>
 
@@ -52,23 +22,21 @@
   </div>
 
   <script>
-    const API_URL = "https://pvt-gaming-api.gamingpivert.workers.dev/api/rosters"; // Remplace par l'URL de ton API
+    const API_URL = "https://pvt-gaming-api.gamingpivert.workers.dev/api/joueurs"; // Remplace par l'URL de ton API
 
     document.getElementById("form-ajouter-joueur").addEventListener("submit", async function(event) {
       event.preventDefault();
       
-      const rosterId = document.getElementById("rosterId").value;
       const pseudo = document.getElementById("pseudo").value;
       const brawlTag = document.getElementById("brawlTag").value;
 
       const joueurData = {
-        id: `joueur-${Date.now()}`, // Générer un ID unique pour le joueur (à ajuster selon ton besoin)
         pseudo,
         brawlTag
       };
 
       try {
-        const response = await fetch(`${API_URL}/${rosterId}`, {
+        const response = await fetch(API_URL, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -80,7 +48,7 @@
           throw new Error(`Erreur: ${response.statusText}`);
         }
 
-        alert("Joueur ajouté avec succès au roster !");
+        alert("Joueur ajouté avec succès !");
         document.getElementById("form-ajouter-joueur").reset();
       } catch (error) {
         alert("Erreur lors de l'ajout du joueur: " + error.message);
