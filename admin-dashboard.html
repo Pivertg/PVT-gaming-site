@@ -24,128 +24,139 @@
     <div id="rosters-container"></div>
   </main>
 
-  <script>
-    const API_URL = "https://pvt-gaming-api.gamingpivert.workers.dev/api";
+   <script>
+  const API_URL = "https://pvt-gaming-api.gamingpivert.workers.dev/api";
+  let currentRosterName = null;
 
-    function logout() {
-      sessionStorage.removeItem("adminToken");
-      window.location.href = "admin.html";
-    }
+  // Vérification de connexion
+  if (sessionStorage.getItem("adminToken") !== "adminLoggedIn") {
+    window.location.href = "admin.html";
+  }
 
-    async function ajouterRoster() {
-      const nom = prompt("Nom du roster :");
-      if (!nom) return;
+  // Créer un roster
+  document.getElementById("form-creer-roster").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
+    const rosterName = document.getElementById("rosterName").value.trim();
+
+    try {
       const response = await fetch(`${API_URL}/rosters`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: nom })
+        body: JSON.stringify({ name: rosterName })
       });
 
-      if (response.ok) {
-        for (let i = 1; i <= 3; i++) {
-          await fetch(`${API_URL}/rosters/${encodeURIComponent(nom)}/joueurs`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ pseudo: `Joueur ${i}`, brawlTag: "", trophées: 0, win3v3: 0, classement: 0, rangMax: 0 })
-          });
-        }
-        chargerRosters();
-      } else {
-        alert("Erreur lors de la création du roster.");
-      }
+      if (!response.ok) throw new Error("Erreur lors de la création du roster");
+
+      alert("✅ Roster créé !");
+      document.getElementById("form-creer-roster").reset();
+      loadRosters();
+
+    } catch (err) {
+      alert("❌ " + err.message);
     }
+  });
 
-    async function supprimerRoster(nom) {
-      if (!confirm("Supprimer ce roster ?")) return;
-      await fetch(`${API_URL}/rosters/${encodeURIComponent(nom)}`, { method: "DELETE" });
-      chargerRosters();
-    }
-
-    async function modifierJoueur(rosterName, joueur) {
-      const nouveauPseudo = prompt("Nouveau pseudo :", joueur.pseudo) || joueur.pseudo;
-      const trophées = parseInt(prompt("Trophées :", joueur.trophées)) || joueur.trophées;
-      const win3v3 = parseInt(prompt("Win 3v3 :", joueur.win3v3)) || joueur.win3v3;
-      const classement = parseInt(prompt("Classement :", joueur.classement)) || joueur.classement;
-      const rangMax = parseInt(prompt("Rang max :", joueur.rangMax)) || joueur.rangMax;
-
-      await fetch(`${API_URL}/rosters/${encodeURIComponent(rosterName)}/joueurs/${joueur.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pseudo: nouveauPseudo, trophées, win3v3, classement, rangMax })
-      });
-
-      chargerRosters();
-    }
-
-    async function supprimerJoueur(rosterName, joueurId) {
-      if (!confirm("Supprimer ce joueur ?")) return;
-      await fetch(`${API_URL}/rosters/${encodeURIComponent(rosterName)}/joueurs/${joueurId}`, { method: "DELETE" });
-      chargerRosters();
-    }
-
-    async function ajouterJoueur(rosterName) {
-      const pseudo = prompt("Pseudo du joueur :");
-      if (!pseudo) return;
-      await fetch(`${API_URL}/rosters/${encodeURIComponent(rosterName)}/joueurs`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pseudo, brawlTag: "", trophées: 0, win3v3: 0, classement: 0, rangMax: 0 })
-      });
-      chargerRosters();
-    }
-
-    async function chargerRosters() {
-      const container = document.getElementById("rosters-container");
-      container.innerHTML = "";
+  // Charger les rosters
+  async function loadRosters() {
+    try {
       const response = await fetch(`${API_URL}/rosters`);
+      if (!response.ok) throw new Error("Erreur de récupération des rosters");
+
       const rosters = await response.json();
+      const table = document.getElementById("rosterTableBody");
+      table.innerHTML = '';
 
       for (const roster of rosters) {
-        const joueursRes = await fetch(`${API_URL}/rosters/${encodeURIComponent(roster.name)}/joueurs`);
-        const joueurs = await joueursRes.json();
-
-        const rosterDiv = document.createElement("div");
-        rosterDiv.style.border = "1px solid #ccc";
-        rosterDiv.style.marginBottom = "2rem";
-        rosterDiv.style.padding = "1rem";
-        rosterDiv.style.borderRadius = "10px";
-        rosterDiv.innerHTML = `
-          <h2>${roster.name}</h2>
-          <button onclick="ajouterJoueur('${roster.name}')" style="margin-bottom: 10px;">+ Ajouter joueur</button>
-          <button onclick="supprimerRoster('${roster.name}')" style="background-color: red; color: white;">Supprimer le roster</button>
-          <table border="1" style="width:100%; margin-top: 10px;">
-            <thead>
-              <tr>
-                <th>Pseudo</th>
-                <th>Trophées</th>
-                <th>Win 3v3</th>
-                <th>Classement</th>
-                <th>Rang Max</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${joueurs.map(joueur => `
-                <tr>
-                  <td>${joueur.pseudo}</td>
-                  <td>${joueur.trophées}</td>
-                  <td>${joueur.win3v3}</td>
-                  <td>${joueur.classement}</td>
-                  <td>${joueur.rangMax}</td>
-                  <td>
-                    <button onclick='modifierJoueur("${roster.name}", ${JSON.stringify(joueur)})'>Modifier</button>
-                    <button onclick='supprimerJoueur("${roster.name}", "${joueur.id}")'>Supprimer</button>
-                  </td>
-                </tr>
-              `).join("")}
-            </tbody>
-          </table>
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${roster.name}</td>
+          <td>
+            <button onclick="selectRoster('${roster.name}')">👥 Gérer Joueurs</button>
+            <button onclick="deleteRoster('${roster.name}')">🗑️ Supprimer</button>
+          </td>
         `;
-
-        container.appendChild(rosterDiv);
+        table.appendChild(row);
       }
+
+    } catch (err) {
+      console.error(err);
     }
+  }
+
+  // Sélectionner un roster
+  function selectRoster(rosterName) {
+    currentRosterName = rosterName;
+    document.getElementById("form-ajouter-joueur-container").style.display = "block";
+    loadJoueurs(rosterName);
+  }
+
+  // Ajouter un joueur
+  document.getElementById("form-ajouter-joueur").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const pseudo = document.getElementById("pseudo").value.trim();
+    const brawlTag = document.getElementById("brawlTag").value.trim();
+
+    try {
+      const response = await fetch(`${API_URL}/rosters/${encodeURIComponent(currentRosterName)}/joueurs`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pseudo, brawlTag })
+      });
+
+      if (!response.ok) throw new Error("Erreur lors de l'ajout du joueur");
+
+      alert("✅ Joueur ajouté !");
+      document.getElementById("form-ajouter-joueur").reset();
+      loadJoueurs(currentRosterName);
+
+    } catch (err) {
+      alert("❌ " + err.message);
+    }
+  });
+
+  // Charger les joueurs d’un roster
+  async function loadJoueurs(rosterName) {
+    try {
+      const response = await fetch(`${API_URL}/rosters/${encodeURIComponent(rosterName)}/joueurs`);
+
+      if (!response.ok) {
+        const msg = await response.text();
+        console.warn("Requête échouée :", msg);
+        return;
+      }
+
+      const joueurs = await response.json();
+      console.log("Joueurs de", rosterName, joueurs);
+      // Tu peux ici afficher les joueurs dynamiquement si tu veux
+
+    } catch (err) {
+      console.error("Erreur de chargement des joueurs :", err);
+    }
+  }
+
+  // Supprimer un roster
+  async function deleteRoster(rosterName) {
+    if (!confirm(`Supprimer le roster "${rosterName}" ?`)) return;
+
+    try {
+      const response = await fetch(`${API_URL}/rosters/${encodeURIComponent(rosterName)}`, {
+        method: "DELETE"
+      });
+
+      if (!response.ok) throw new Error("Erreur lors de la suppression du roster");
+
+      alert("🗑️ Roster supprimé !");
+      loadRosters();
+
+    } catch (err) {
+      alert("❌ " + err.message);
+    }
+  }
+
+  loadRosters();
+</script>
 
     chargerRosters();
   </script>
