@@ -9,7 +9,16 @@
 </head>
 <body>
   <div class="form-container">
-    <h2>Ajouter un Joueur</h2>
+    <h2>Créer un Roster</h2>
+    <form id="form-creer-roster">
+      <label for="rosterName">Nom du Roster :</label>
+      <input type="text" id="rosterName" name="rosterName" required>
+      <button type="submit">Créer le Roster</button>
+    </form>
+  </div>
+
+  <div class="form-container" id="form-ajouter-joueur-container" style="display:none;">
+    <h2>Ajouter un Joueur au Roster</h2>
     <form id="form-ajouter-joueur">
       <label for="pseudo">Pseudo :</label>
       <input type="text" id="pseudo" name="pseudo" required>
@@ -21,12 +30,78 @@
     </form>
   </div>
 
+  <h2>Liste des Roster</h2>
+  <table id="rosterTable">
+    <thead>
+      <tr>
+        <th>Nom du Roster</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Les rosters seront ajoutés ici dynamiquement -->
+    </tbody>
+  </table>
+
   <script>
-    const API_URL = "https://pvt-gaming-api.gamingpivert.workers.dev/api/joueurs"; // Remplace par l'URL de ton API
+    const API_URL = "https://pvt-gaming-api.gamingpivert.workers.dev/api"; // Remplace par l'URL de ton API
+    let currentRosterId = null;
+
+    document.getElementById("form-creer-roster").addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const rosterName = document.getElementById("rosterName").value;
+
+      try {
+        const response = await fetch(`${API_URL}/rosters`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ name: rosterName })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Erreur: ${response.statusText}`);
+        }
+
+        alert("Roster créé avec succès !");
+        document.getElementById("form-creer-roster").reset();
+        loadRosters();  // Recharger la liste des rosters
+      } catch (error) {
+        alert("Erreur lors de la création du roster: " + error.message);
+      }
+    });
+
+    async function loadRosters() {
+      const response = await fetch(`${API_URL}/rosters`);
+      const rosters = await response.json();
+      const rosterTableBody = document.getElementById("rosterTable").getElementsByTagName("tbody")[0];
+
+      // Vider le tableau avant de le remplir
+      rosterTableBody.innerHTML = '';
+
+      rosters.forEach(roster => {
+        const row = rosterTableBody.insertRow();
+        row.innerHTML = `
+          <td>${roster.name}</td>
+          <td>
+            <button onclick="viewRoster('${roster.id}')">Voir les joueurs</button>
+            <button onclick="deleteRoster('${roster.id}')">Supprimer</button>
+          </td>
+        `;
+      });
+    }
+
+    async function viewRoster(rosterId) {
+      currentRosterId = rosterId;
+      document.getElementById("form-ajouter-joueur-container").style.display = "block";
+      document.getElementById("form-ajouter-joueur").reset();
+    }
 
     document.getElementById("form-ajouter-joueur").addEventListener("submit", async function(event) {
       event.preventDefault();
-      
+
       const pseudo = document.getElementById("pseudo").value;
       const brawlTag = document.getElementById("brawlTag").value;
 
@@ -36,7 +111,7 @@
       };
 
       try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(`${API_URL}/rosters/${currentRosterId}/joueurs`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -54,6 +129,26 @@
         alert("Erreur lors de l'ajout du joueur: " + error.message);
       }
     });
+
+    async function deleteRoster(rosterId) {
+      try {
+        const response = await fetch(`${API_URL}/rosters/${rosterId}`, {
+          method: "DELETE"
+        });
+
+        if (!response.ok) {
+          throw new Error(`Erreur: ${response.statusText}`);
+        }
+
+        alert("Roster supprimé avec succès !");
+        loadRosters();  // Recharger la liste des rosters
+      } catch (error) {
+        alert("Erreur lors de la suppression du roster: " + error.message);
+      }
+    }
+
+    // Charger les rosters au démarrage
+    loadRosters();
   </script>
 </body>
 </html>
