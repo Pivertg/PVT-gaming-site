@@ -7,15 +7,19 @@
     <link rel="stylesheet" href="style-admin.css">
 </head>
 <script>
+    const API_URL = "https://pvt-gaming-api.gamingpivert.workers.dev/api/joueurs";
+    const BRAWL_STARS_API = "https://api.brawlstars.com/v1";  // Remplace avec l'URL correcte pour l'API Brawl Stars
+
+    // Vérifie si l'administrateur est bien authentifié
     if (sessionStorage.getItem("adminToken") !== "adminLoggedIn") {
         alert("❌ Accès refusé ! Veuillez vous connecter.");
-        window.location.href = "admin.html";
+        window.location.href = "admin.html"; // Redirige vers la page de connexion
     }
 
     function logout() {
-        sessionStorage.removeItem("adminToken");
+        sessionStorage.removeItem("adminToken"); // Supprime la session active
         alert("👋 Déconnexion réussie !");
-        window.location.href = "admin.html";
+        window.location.href = "admin.html"; // Redirige vers la page de connexion
     }
 </script>
 <body>
@@ -25,118 +29,97 @@
         <button onclick="logout()">🚪 Se déconnecter</button>
     </div>
 
-    <div class="add-player">
-        <button onclick="ajouterJoueur()">➕ Ajouter un joueur</button>
+    <div class="add-roster">
+        <input type="text" id="rosterName" placeholder="Nom du roster">
+        <button onclick="ajouterRoster()">Ajouter Roster</button>
     </div>
 
-    <div id="joueurs-container"></div>
+    <div class="roster-container" id="rosterList"></div>
 
     <script>
-        const API_URL = "https://pvt-gaming-api.gamingpivert.workers.dev/api/joueurs";
+        async function chargerRosters() {
+            const response = await fetch(`${API_URL}`);
+            const rosters = await response.json();
+            const rosterList = document.getElementById("rosterList");
+            rosterList.innerHTML = "";
 
-        async function chargerJoueurs() {
-            const response = await fetch(API_URL);
-            const joueurs = await response.json();
-            const container = document.getElementById("joueurs-container");
-            container.innerHTML = "";
-
-            const groupedByRoster = {};
-
-            joueurs.forEach(joueur => {
-                const roster = joueur.roster || "Inconnu";
-                if (!groupedByRoster[roster]) groupedByRoster[roster] = [];
-                groupedByRoster[roster].push(joueur);
-            });
-
-            for (const roster in groupedByRoster) {
+            rosters.forEach(roster => {
                 const div = document.createElement("div");
-                div.classList.add("roster-block");
-                div.innerHTML = `<h2>${roster}</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Pseudo</th>
-                            <th>Trophées</th>
-                            <th>Win 3v3</th>
-                            <th>Classement</th>
-                            <th>Rang Max</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${groupedByRoster[roster].map(joueur => `
+                div.classList.add("roster-card");
+                div.innerHTML = `
+                    <input type="text" class="editable" value="${roster.nom}" onblur="modifierRoster(${roster.id}, this.value)">
+                    <button onclick="supprimerRoster(${roster.id})">❌ Supprimer</button>
+
+                    <table>
+                        <thead>
                             <tr>
-                                <td>${joueur.pseudo}</td>
-                                <td>${joueur.trophees}</td>
-                                <td>${joueur.win3v3}</td>
-                                <td>${joueur.classement}</td>
-                                <td>${joueur.rangMax}</td>
-                                <td>
-                                    <button onclick="supprimerJoueur('${joueur.id}')">❌</button>
-                                </td>
+                                <th>Pseudo</th>
+                                <th>🏆 Trophées</th>
+                                <th>🏅 Win 3V3</th>
+                                <th>📊 Classé</th>
+                                <th>🔝 Rang Max</th>
+                                <th>Action</th>
                             </tr>
-                        `).join("")}
-                    </tbody>
-                </table>`;
-                container.appendChild(div);
-            }
+                        </thead>
+                        <tbody id="joueurs-${roster.id}">
+                        </tbody>
+                    </table>
+
+                    <div class="add-player">
+                        <button onclick="ajouterJoueur(${roster.id})">+ Ajouter un joueur</button>
+                    </div>
+                `;
+
+                rosterList.appendChild(div);
+                afficherJoueurs(roster.id);
+            });
         }
 
-        async function ajouterJoueur() {
-            const id = prompt("ID unique du joueur (ex: uuid ou pseudo#tag)").trim();
-            const pseudo = prompt("Pseudo du joueur :").trim();
-            const trophees = prompt("Nombre de trophées :").trim();
-            const win3v3 = prompt("Victoires 3v3 :").trim();
-            const classement = prompt("Classement :").trim();
-            const rangMax = prompt("Rang Max :").trim();
-            const roster = prompt("Nom du roster (ex: roster4, roster5) :").trim();
-
-            if (!id || !pseudo || !trophees || !win3v3 || !classement || !roster) {
-                alert("Tous les champs obligatoires doivent être remplis !");
+        async function ajouterJoueur(rosterId) {
+            const tag = prompt("Entrez le tag Brawl Stars du joueur (par exemple : 'P8PPLR2')").trim();
+            if (!tag) {
+                alert("Le tag du joueur ne peut pas être vide !");
                 return;
             }
 
-            const joueur = {
-                id,
-                pseudo,
-                trophees: parseInt(trophees),
-                win3v3: parseInt(win3v3),
-                classement,
-                rangMax,
-                roster
-            };
-
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(joueur)
-            });
-
-            if (response.ok) {
-                alert("✅ Joueur ajouté !");
-                chargerJoueurs();
-            } else {
-                const err = await response.text();
-                alert("❌ Erreur : " + err);
+            const joueur = await recupererInfoBrawlStars(tag);
+            if (joueur) {
+                await fetch(`${API_URL}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        pseudo: joueur.name,
+                        trophées: joueur.trophies,
+                        win3v3: joueur.wins,
+                        classement: joueur.rank,
+                        rangMax: joueur.maxRank,
+                        rosterId: rosterId
+                    })
+                });
+                chargerRosters(); // Recharge la liste des rosters avec le joueur ajouté
             }
         }
 
-        async function supprimerJoueur(id) {
-            if (!confirm("Supprimer ce joueur ?")) return;
-
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: "DELETE"
-            });
-
-            if (response.ok) {
-                alert("✅ Joueur supprimé !");
-                chargerJoueurs();
-            } else {
-                alert("❌ Erreur lors de la suppression");
+        async function recupererInfoBrawlStars(tag) {
+            try {
+                const response = await fetch(`${BRAWL_STARS_API}/players/${tag}`);
+                if (!response.ok) throw new Error("Erreur API Brawl Stars");
+                const data = await response.json();
+                return {
+                    name: data.name,
+                    trophies: data.trophies,
+                    wins: data.wins,
+                    rank: data.rank,
+                    maxRank: data.maxRank
+                };
+            } catch (error) {
+                alert("❌ Impossible de récupérer les informations Brawl Stars");
+                console.error(error);
+                return null;
             }
         }
 
-        chargerJoueurs();
+        chargerRosters(); // Charger la liste des rosters à chaque initialisation de la page
     </script>
 
 </body>
