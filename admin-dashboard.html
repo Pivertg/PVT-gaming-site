@@ -67,7 +67,7 @@
 
         alert("Roster créé avec succès !");
         document.getElementById("form-creer-roster").reset();
-        loadRosters();
+        loadRosters();  // Recharger la liste des rosters
       } catch (error) {
         alert("Erreur lors de la création du roster: " + error.message);
       }
@@ -77,6 +77,8 @@
       const response = await fetch(`${API_URL}/rosters`);
       const rosters = await response.json();
       const rosterTableBody = document.getElementById("rosterTable").getElementsByTagName("tbody")[0];
+
+      // Vider le tableau avant de le remplir
       rosterTableBody.innerHTML = '';
 
       rosters.forEach(roster => {
@@ -139,12 +141,13 @@
         }
 
         alert("Roster supprimé avec succès !");
-        loadRosters();
+        loadRosters();  // Recharger la liste des rosters
       } catch (error) {
         alert("Erreur lors de la suppression du roster: " + error.message);
       }
     }
 
+    // Charger les rosters au démarrage
     loadRosters();
   </script>
 </body>
