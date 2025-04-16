@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     
     // Indicateur de fonctionnalité - Attirer l'attention sur le menu
-    // Ajouter une classe d'animation après un court délai pour les nouveaux utilisateurs
     setTimeout(function() {
         menuButton.classList.add("attention");
         
@@ -46,13 +45,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // Enregistrer si l'utilisateur a déjà ouvert le menu
     menuButton.addEventListener("click", function() {
         localStorage.setItem("menuOpened", "true");
-        menuButton.classList.remove("attention"); // Arrêter l'animation une fois cliqué
+        menuButton.classList.remove("attention");
     });
     
     // Vérifier si l'utilisateur a déjà ouvert le menu
     window.addEventListener("load", function() {
         if (!localStorage.getItem("menuOpened")) {
-            // Montrer l'animation uniquement pour les nouveaux utilisateurs
             setTimeout(function() {
                 menuButton.classList.add("attention");
             }, 2000);
