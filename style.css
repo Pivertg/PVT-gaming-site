@@ -387,7 +387,7 @@ footer {
     padding: 15px;
     margin: 10px 0;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: o 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .social-links {
@@ -474,4 +474,142 @@ footer {
       var(--c3) 0 180deg
     );
   background-size: var(--s) calc(var(--s) * 0.577);
+}
+
+/* === NOUVEAU MENU LATÉRAL === */
+/* === Menu latéral === */
+.side-menu {
+    position: fixed;
+    left: -280px; /* Caché initialement */
+    top: 0;
+    height: 100vh;
+    width: 280px;
+    background-color: #1a1a1a;
+    z-index: 1000;
+    transition: left 0.3s ease-in-out;
+    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+}
+
+/* Classe pour afficher le menu */
+.side-menu.show {
+    left: 0;
+}
+
+/* En-tête du menu latéral */
+.side-menu-header {
+    padding: 20px;
+    background-color: #222222;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.side-menu-title {
+    color: #27e5a2;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.close-menu {
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-menu:hover {
+    color: #27e5a2;
+}
+
+/* Contenu du menu latéral */
+.side-menu-content {
+    padding: 10px;
+}
+
+.side-menu-content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.side-menu-content li {
+    margin: 5px 0;
+}
+
+.side-menu-content a {
+    display: block;
+    padding: 12px 15px;
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.side-menu-content a:hover {
+    background-color: #27e5a2;
+    color: #222222;
+}
+
+/* Indicateur de menu */
+.menu-button {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 999;
+    background-color: #27e5a2;
+    color: #222222;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.menu-button:hover {
+    background-color: #1cc28b;
+}
+
+/* Style pour l'icône hamburger */
+.menu-button .hamburger {
+    width: 20px;
+    height: 16px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.menu-button .hamburger span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background-color: #222222;
+    transition: transform 0.3s ease;
+}
+
+/* Overlay de fond lors de l'ouverture du menu */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+.menu-overlay.show {
+    display: block;
+}
+
+/* Animation subtile pour indiquer le menu */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.menu-button.attention {
+    animation: pulse 1s infinite;
 }
