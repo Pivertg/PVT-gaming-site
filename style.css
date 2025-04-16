@@ -387,7 +387,7 @@ footer {
     padding: 15px;
     margin: 10px 0;
     border-radius: 10px;
-    box-shadow: o 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .social-links {
@@ -476,24 +476,24 @@ footer {
   background-size: var(--s) calc(var(--s) * 0.577);
 }
 
-/* === NOUVEAU MENU LATÉRAL === */
+/* === NOUVEAU MENU LATÉRAL DROIT === */
 /* === Menu latéral === */
 .side-menu {
     position: fixed;
-    left: -280px; /* Caché initialement */
+    right: -280px; /* Caché initialement à droite */
     top: 0;
     height: 100vh;
     width: 280px;
     background-color: #1a1a1a;
     z-index: 1000;
-    transition: left 0.3s ease-in-out;
-    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease-in-out; /* Transition sur right au lieu de left */
+    box-shadow: -3px 0 10px rgba(0, 0, 0, 0.2); /* Ombre à gauche */
     overflow-y: auto;
 }
 
 /* Classe pour afficher le menu */
 .side-menu.show {
-    left: 0;
+    right: 0; /* Affiche à droite */
 }
 
 /* En-tête du menu latéral */
@@ -550,11 +550,11 @@ footer {
     color: #222222;
 }
 
-/* Indicateur de menu */
+/* Indicateur de menu - à droite */
 .menu-button {
     position: fixed;
     top: 15px;
-    left: 15px;
+    right: 15px; /* Placé à droite */
     z-index: 999;
     background-color: #27e5a2;
     color: #222222;
