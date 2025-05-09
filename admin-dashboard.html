@@ -59,8 +59,8 @@
       .then(response => {
         if (!response.ok) throw new Error("Erreur lors de la création du roster");
         alert("✅ Roster créé !");
-        loadRosters();
-        document.getElementById("rosterName").value = ''; // Reset input field
+        loadRosters();  // Recharger la liste des rosters
+        document.getElementById("rosterName").value = '';  // Réinitialiser le champ du nom du roster
       })
       .catch(err => alert("❌ " + err.message));
     }
@@ -73,7 +73,7 @@
 
         const rosters = await response.json();
         const container = document.getElementById("rosters-container");
-        container.innerHTML = '';
+        container.innerHTML = ''; // Vider le conteneur
 
         rosters.forEach(roster => {
           const rosterDiv = document.createElement("div");
@@ -91,19 +91,21 @@
       }
     }
 
-    // Sélectionner un roster
+    // Sélectionner un roster pour ajouter des joueurs
     function selectRoster(rosterName) {
       currentRosterName = rosterName;
-      document.getElementById("form-ajouter-joueur-container").style.display = "block";
-      loadJoueurs(rosterName);
+      document.getElementById("form-ajouter-joueur-container").style.display = "block"; // Afficher le formulaire d'ajout de joueur
+      loadJoueurs(rosterName);  // Charger les joueurs du roster
     }
 
-    // Ajouter un joueur
+    // Ajouter un joueur dans un roster
     document.getElementById("form-ajouter-joueur").addEventListener("submit", async function (event) {
-      event.preventDefault();
+      event.preventDefault();  // Empêcher le rechargement de la page
 
       const pseudo = document.getElementById("pseudo").value.trim();
       const brawlTag = document.getElementById("brawlTag").value.trim();
+
+      if (!pseudo || !brawlTag) return alert("Veuillez remplir tous les champs.");
 
       try {
         const response = await fetch(`${API_URL}/rosters/${encodeURIComponent(currentRosterName)}/joueurs`, {
@@ -115,8 +117,8 @@
         if (!response.ok) throw new Error("Erreur lors de l'ajout du joueur");
 
         alert("✅ Joueur ajouté !");
-        document.getElementById("form-ajouter-joueur").reset();
-        loadJoueurs(currentRosterName);
+        document.getElementById("form-ajouter-joueur").reset(); // Réinitialiser le formulaire
+        loadJoueurs(currentRosterName); // Recharger les joueurs du roster
 
       } catch (err) {
         alert("❌ " + err.message);
@@ -135,7 +137,7 @@
 
         const joueurs = await response.json();
         console.log("Joueurs de", rosterName, joueurs);
-        // Affiche les joueurs si nécessaire
+        // Affiche les joueurs si nécessaire (tu peux ajouter un affichage ici si tu veux)
 
       } catch (err) {
         console.error("Erreur de chargement des joueurs :", err);
@@ -154,14 +156,14 @@
         if (!response.ok) throw new Error("Erreur lors de la suppression du roster");
 
         alert("🗑️ Roster supprimé !");
-        loadRosters();
+        loadRosters(); // Recharger la liste des rosters après suppression
 
       } catch (err) {
         alert("❌ " + err.message);
       }
     }
 
-    loadRosters();
+    loadRosters(); // Charger les rosters dès le chargement de la page
   </script>
 </body>
 </html>
