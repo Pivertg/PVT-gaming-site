@@ -25,6 +25,21 @@
   <main style="padding: 2rem;">
     <button onclick="ajouterRoster()" style="margin-bottom: 1rem; background-color: #27e5a2; color: black; padding: 10px 20px; font-size: 1rem; border: none; border-radius: 8px;">+ Ajouter un Roster</button>
     <div id="rosters-container"></div>
+
+    <!-- Formulaire pour ajouter un roster -->
+    <form id="form-creer-roster" style="display: none;">
+      <input type="text" id="rosterName" placeholder="Nom du roster" required />
+      <button type="submit">Créer</button>
+    </form>
+
+    <!-- Formulaire pour ajouter un joueur -->
+    <div id="form-ajouter-joueur-container" style="display: none;">
+      <form id="form-ajouter-joueur">
+        <input type="text" id="pseudo" placeholder="Pseudo du joueur" required />
+        <input type="text" id="brawlTag" placeholder="Brawl Tag" required />
+        <button type="submit">Ajouter le joueur</button>
+      </form>
+    </div>
   </main>
 
    <script>
@@ -67,20 +82,18 @@
       if (!response.ok) throw new Error("Erreur de récupération des rosters");
 
       const rosters = await response.json();
-      const table = document.getElementById("rosterTableBody");
-      table.innerHTML = '';
+      const container = document.getElementById("rosters-container");
+      container.innerHTML = '';
 
-      for (const roster of rosters) {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${roster.name}</td>
-          <td>
-            <button onclick="selectRoster('${roster.name}')">👥 Gérer Joueurs</button>
-            <button onclick="deleteRoster('${roster.name}')">🗑️ Supprimer</button>
-          </td>
+      rosters.forEach(roster => {
+        const rosterDiv = document.createElement("div");
+        rosterDiv.innerHTML = `
+          <h3>${roster.name}</h3>
+          <button onclick="selectRoster('${roster.name}')">👥 Gérer Joueurs</button>
+          <button onclick="deleteRoster('${roster.name}')">🗑️ Supprimer</button>
         `;
-        table.appendChild(row);
-      }
+        container.appendChild(rosterDiv);
+      });
 
     } catch (err) {
       console.error(err);
@@ -132,7 +145,7 @@
 
       const joueurs = await response.json();
       console.log("Joueurs de", rosterName, joueurs);
-      // Tu peux ici afficher les joueurs dynamiquement si tu veux
+      // Affiche les joueurs si nécessaire
 
     } catch (err) {
       console.error("Erreur de chargement des joueurs :", err);
@@ -161,7 +174,5 @@
   loadRosters();
 </script>
 
-    chargerRosters();
-  </script>
 </body>
 </html>
