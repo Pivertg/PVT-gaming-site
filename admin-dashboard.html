@@ -1,125 +1,151 @@
-export default {
-  async fetch(request, env) {
-    const url = new URL(request.url);
-    const headers = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type"
-    };
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="style-admin.css">
+  <link rel="stylesheet" href="style-buttons.css">
+</head>
+<body>
+  <script>
+    // Redirection si non connecté
+    if (sessionStorage.getItem("adminToken") !== "adminLoggedIn") {
+      window.location.href = "admin.html";
+    }
+  </script>
 
-    if (request.method === "OPTIONS") {
-      return new Response(null, { status: 204, headers });
+  <header class="navbar">
+    <h1>Admin Dashboard</h1>
+    <button onclick="sessionStorage.removeItem('adminToken'); window.location.href='admin.html';">Déconnexion</button>
+  </header>
+
+  <main style="padding: 2rem;">
+    <div class="add-roster">
+      <input type="text" id="rosterName" placeholder="Nom du roster" required />
+      <button onclick="creerRoster()">Créer un Roster</button>
+    </div>
+
+    <div id="rosters-container" class="roster-container"></div>
+
+    <div id="form-ajouter-joueur-container" style="display: none;">
+      <form id="form-ajouter-joueur">
+        <input type="text" id="pseudo" placeholder="Pseudo du joueur" required />
+        <input type="text" id="brawlTag" placeholder="Brawl Tag" required />
+        <button type="submit">Ajouter le joueur</button>
+      </form>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <button onclick="deleteAllData()">Supprimer toutes les infos de l'API</button>
+    </div>
+  </main>
+
+  <script>
+    const API_URL = "https://pvt-gaming-api.gamingpivert.workers.dev/api";
+    let currentRosterName = null;
+
+    // Vérification de connexion
+    if (sessionStorage.getItem("adminToken") !== "adminLoggedIn") {
+      window.location.href = "admin.html";
     }
 
-    try {
-      // Créer un roster
-      if (request.method === "POST" && url.pathname === "/api/rosters") {
-        const rosterData = await request.json();
-        if (!rosterData.name) throw new Error("Nom de roster manquant");
-        rosterData.joueurs = [];
-        await env.ROSTERS.put(rosterData.name, JSON.stringify(rosterData));
-        return new Response("Roster créé avec succès", { status: 200, headers });
-      }
+    // Créer un roster
+    function creerRoster() {
+      const rosterName = document.getElementById("rosterName").value.trim();
+      if (!rosterName) return;
 
-      // Ajouter un joueur à un roster
-      if (request.method === "POST" && url.pathname.startsWith("/api/rosters/")) {
-        const rosterName = decodeURIComponent(url.pathname.split("/")[3]);
-        const joueurData = await request.json();
-        const roster = await env.ROSTERS.get(rosterName);
-
-        if (roster) {
-          const rosterParsed = JSON.parse(roster);
-          if (!rosterParsed.joueurs) rosterParsed.joueurs = [];
-          rosterParsed.joueurs.push(joueurData);
-          await env.ROSTERS.put(rosterName, JSON.stringify(rosterParsed));
-          return new Response("Joueur ajouté avec succès", { status: 200, headers });
-        }
-        return new Response("Roster non trouvé", { status: 404, headers });
-      }
-
-      // Récupérer tous les rosters
-      if (request.method === "GET" && url.pathname === "/api/rosters") {
-        const rosters = [];
-        const list = await env.ROSTERS.list();
-        for (const key of list.keys) {
-          const value = await env.ROSTERS.get(key.name);
-          if (value) rosters.push(JSON.parse(value));
-        }
-        return new Response(JSON.stringify(rosters), { status: 200, headers });
-      }
-
-      // Récupérer tous les joueurs par roster
-      if (request.method === "GET" && url.pathname === "/api/joueurs") {
-        const joueursParRoster = {};
-        const list = await env.JOUEURS.list();
-        for (const key of list.keys) {
-          const value = await env.JOUEURS.get(key.name);
-          const joueur = JSON.parse(value);
-          if (!joueursParRoster[joueur.roster]) joueursParRoster[joueur.roster] = [];
-          joueursParRoster[joueur.roster].push(joueur);
-        }
-        return new Response(JSON.stringify(joueursParRoster), { status: 200, headers });
-      }
-
-      // Ajouter un joueur
-      if (request.method === "POST" && url.pathname === "/api/joueurs") {
-        const joueurData = await request.json();
-        if (!joueurData.brawlTag || !joueurData.roster) throw new Error("Données manquantes");
-        await env.JOUEURS.put(joueurData.brawlTag, JSON.stringify(joueurData));
-        return new Response("Joueur ajouté avec succès", { status: 200, headers });
-      }
-
-      // Supprimer un joueur
-      if (request.method === "DELETE" && url.pathname.startsWith("/api/joueurs/")) {
-        const brawlTag = decodeURIComponent(url.pathname.split("/")[3]);
-        await env.JOUEURS.delete(brawlTag);
-        return new Response("Joueur supprimé avec succès", { status: 200, headers });
-      }
-
-      // Supprimer tous les rosters et leurs joueurs associés
-      if (request.method === "DELETE" && url.pathname === "/api/rosters") {
-        const list = await env.ROSTERS.list();
-        for (const key of list.keys) {
-          // Récupérer chaque roster pour supprimer ses joueurs
-          const roster = await env.ROSTERS.get(key.name);
-          if (roster) {
-            const rosterParsed = JSON.parse(roster);
-            if (rosterParsed.joueurs && rosterParsed.joueurs.length > 0) {
-              // Supprimer tous les joueurs associés à ce roster
-              for (const joueur of rosterParsed.joueurs) {
-                await env.JOUEURS.delete(joueur.brawlTag); // Supprimer le joueur par son BrawlTag
-              }
-            }
-          }
-          await env.ROSTERS.delete(key.name); // Supprimer le roster
-        }
-
-        return new Response("Tous les rosters et leurs joueurs ont été supprimés.", { status: 200, headers });
-      }
-
-      // Supprimer un roster spécifique et ses joueurs associés
-      if (request.method === "DELETE" && url.pathname.startsWith("/api/rosters/")) {
-        const rosterName = decodeURIComponent(url.pathname.split("/")[3]);
-        const roster = await env.ROSTERS.get(rosterName);
-
-        if (roster) {
-          const rosterParsed = JSON.parse(roster);
-          if (rosterParsed.joueurs && rosterParsed.joueurs.length > 0) {
-            // Supprimer tous les joueurs associés à ce roster
-            for (const joueur of rosterParsed.joueurs) {
-              await env.JOUEURS.delete(joueur.brawlTag); // Supprimer le joueur par son BrawlTag
-            }
-          }
-          // Supprimer le roster
-          await env.ROSTERS.delete(rosterName);
-          return new Response(`Roster ${rosterName} et ses joueurs ont été supprimés.`, { status: 200, headers });
-        }
-        return new Response("Roster non trouvé", { status: 404, headers });
-      }
-
-      return new Response("Route non trouvée", { status: 404, headers });
-    } catch (error) {
-      return new Response("Erreur interne : " + error.message, { status: 500, headers });
+      fetch(`${API_URL}/rosters`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: rosterName })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Erreur lors de la création du roster");
+        alert("✅ Roster créé !");
+        loadRosters();
+        document.getElementById("rosterName").value = ''; // Reset input field
+      })
+      .catch(err => alert("❌ " + err.message));
     }
-  }
-};
+
+    // Charger les rosters
+    async function loadRosters() {
+      try {
+        const response = await fetch(`${API_URL}/rosters`);
+        if (!response.ok) throw new Error("Erreur de récupération des rosters");
+
+        const rosters = await response.json();
+        const container = document.getElementById("rosters-container");
+        container.innerHTML = '';
+
+        rosters.forEach(roster => {
+          const rosterDiv = document.createElement("div");
+          rosterDiv.classList.add("roster-card");
+          rosterDiv.innerHTML = `
+            <h2>${roster.name}</h2>
+            <button onclick="selectRoster('${roster.name}')">👥 Gérer Joueurs</button>
+            <button onclick="deleteRoster('${roster.name}')">🗑️ Supprimer</button>
+          `;
+          container.appendChild(rosterDiv);
+        });
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Sélectionner un roster
+    function selectRoster(rosterName) {
+      currentRosterName = rosterName;
+      document.getElementById("form-ajouter-joueur-container").style.display = "block";
+      loadJoueurs(rosterName);
+    }
+
+    // Ajouter un joueur
+    document.getElementById("form-ajouter-joueur").addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const pseudo = document.getElementById("pseudo").value.trim();
+      const brawlTag = document.getElementById("brawlTag").value.trim();
+
+      try {
+        const response = await fetch(`${API_URL}/rosters/${encodeURIComponent(currentRosterName)}/joueurs`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pseudo, brawlTag })
+        });
+
+        if (!response.ok) throw new Error("Erreur lors de l'ajout du joueur");
+
+        alert("✅ Joueur ajouté !");
+        document.getElementById("form-ajouter-joueur").reset();
+        loadJoueurs(currentRosterName);
+
+      } catch (err) {
+        alert("❌ " + err.message);
+      }
+    });
+
+    // Supprimer tous les rosters et les joueurs
+    function deleteAllData() {
+      if (confirm("Êtes-vous sûr de vouloir supprimer toutes les données de l'API ?")) {
+        fetch(`${API_URL}/rosters`, {
+          method: "DELETE"
+        })
+        .then(response => {
+          if (response.ok) {
+            alert("✅ Toutes les données ont été supprimées.");
+            loadRosters();
+          } else {
+            alert("❌ Erreur lors de la suppression des données");
+          }
+        });
+      }
+    }
+
+    // Charger les rosters au démarrage
+    loadRosters();
+  </script>
+</body>
+</html>
