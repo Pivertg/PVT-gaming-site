@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!-- dev rien je vias surment supp-->
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosters - PVT|Gaming</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tables.css"> <!-- Lien vers ton fichier CSS pour les tableaux -->
+</head>
+   <header>
+     <div class="logo">PVT|Gaming</div>
+   <!-- Vous pouvez supprimer l'ancien menu si vous ne voulez utiliser que le nouveau -->
+   </header>
+<body>
+
+    <!-- Fond animé -->
+<div class="container"></div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PVT|Gaming - Fil d'actualité</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Bouton pour ouvrir le menu (à droite) -->
+    <button class="menu-button">
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </button>
+
+    <!-- Overlay de fond -->
+    <div class="menu-overlay"></div>
+
+    <!-- Menu latéral (à droite) -->
+    <div class="side-menu">
+        <div class="side-menu-header">
+            <div class="close-menu">&times;</div>
+        </div>
+        <div class="side-menu-content">
+            <ul>
+                   <li><a href="index.html">🏠 Accueil</a></li>
+                   <li><a href="roster-bs.html">📋 Rosters Brawl star</a></li>
+                   <li><a href="reseau.html">📱 Reseau</a></li>
+                   <li><a href="index.html">🎮 jeux de draft</a></li>
+                   <li><a href="login.html">🔑 Connexion</a></li>
+                   <li><a href="login-inscription.html">🖋️ Inscription des nouveaux joueurs</a></li>
+        </div>
+            </ul>
+        </div>
+    </div>
+    <main>
+        <h1>Nos Rosters</h1>
+
+        <!-- Sélection du roster -->
+        <label for="roster-select">Sélectionnez un roster :</label>
+        <select id="roster-select">
+            <option value="">-- Choisissez un roster --</option>
+            <option value="roster4">Roster 4</option>
+            <option value="roster5">Roster 5</option>
+        </select>
+
+        <!-- Détails du roster sélectionné -->
+        <div id="roster-details">
+            <p>Sélectionnez un roster pour voir les détails.</p>
+
+            <!-- Tableau des joueurs du roster sélectionné -->
+            <table class="roster-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Trophées</th>
+                        <th>Win 3v3</th>
+                        <th>Classement</th>
+                        <th>Rang Max</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John Doe</td>
+                        <td>10</td>
+                        <td>15</td>
+                        <td>Plat 1</td>
+                        <td>Gold</td>
+                    </tr>
+                    <tr>
+                        <td>Jane Smith</td>
+                        <td>8</td>
+                        <td>12</td>
+                        <td>Gold 2</td>
+                        <td>Silver</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 PVT|Gaming - Tous droits réservés</p>
+    </footer>
+
+    <!-- Scripts placés ici pour s'assurer que le DOM est chargé -->
+    <script src="menu.js"></script>
+    <script src="roster-rl.js"></script>
+</body>
+</html>

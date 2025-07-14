@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <header>
+       <div class="logo">PVT|Gaming</div>
+       <!-- Vous pouvez supprimer l'ancien menu si vous ne voulez utiliser que le nouveau -->
+   </header>
+<!-- Fond animé -->
+<div class="container"></div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PVT|Gaming - Fil d'actualité</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Bouton pour ouvrir le menu (à droite) -->
+    <button class="menu-button">
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </button>
+
+    <!-- Overlay de fond -->
+    <div class="menu-overlay"></div>
+
+    <!-- Menu latéral (à droite) -->
+    <div class="side-menu">
+        <div class="side-menu-header">
+            <div class="side-menu-title">PVT|Gaming</div>
+            <div class="close-menu">&times;</div>
+        </div>
+        <div class="side-menu-content">
+            <ul>
+              <li><a href="index.html">🏠 Accueil</a></li>
+              <li><a href="reseau.html">📱 Reseau</a></li>
+              <li><a href="roster-bs.html">📋 Rosters Brawl star</a></li>
+              <li><a href="roster-rl.html">📋 Rosters Rocket league</a></li>
+              <li><a href="index.html">🎮 jeux de draft</a></li>
+              <li><a href="login-inscription.html">🖋️ Inscription des nouveaux joueurs</a></li>
+              <li><a href="admin.html">🔑 Connexion Admin</a></li>
+        </div>
+            </ul>
+        </div>
+    </div>
+    <main class="login-container">
+        <div class="login-box">
+            <h1>🔑 Connexion Joueur</h1>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="username">👤 Pseudo</label>
+                    <input type="text" id="username" placeholder="Entrez votre pseudo" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">🔒 Mot de passe</label>
+                    <input type="password" id="password" placeholder="Entrez votre mot de passe" required>
+                </div>
+
+                <button type="submit" class="btn">🚀 Se connecter</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 PVT|Gaming - Tous droits réservés</p>
+    </footer>
+
+    <!-- Script pour gérer la connexion des joueurs -->
+    <script>
+        document.getElementById("login-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            // Ici, tu peux ajouter une vraie vérification avec une base de données
+            if (username && password) {
+                alert("✅ Connexion réussie !");
+                localStorage.setItem("playerToken", username); // Stocke le pseudo comme token
+                window.location.href = "player-dashboard.html"; // Redirige vers le tableau de bord joueur
+            } else {
+                alert("❌ Pseudo ou mot de passe incorrect !");
+            }
+        });
+    </script>
+
+    <script src="menu.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!doctype html>
+<!-- vérifier le si le php marche-->
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jeu - Salle</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="game.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="left-panel">
+        <img class="mode-img" src="https://via.placeholder.com/120x120?text=Mode" id="mode-img" alt="Mode" />
+        <div class="map-name" id="map-name">Nom de la map</div>
+        <img class="map-img" src="https://via.placeholder.com/220x120?text=Map" id="map-img" alt="Map" />
+      </div>
+      <div class="center-panel">
+        <div class="pick-rect bleu" id="pick-bleu"></div>
+        <div class="pick-zone">
+          <div class="timer" id="timer">Temps restant : 60s</div>
+          <div class="brawler-list" id="brawler-list"></div>
+          <div class="actions">
+            <button id="validate-btn" disabled>Valider</button>
+            <button id="restart-btn">Recommencer</button>
+          </div>
+        </div>
+        <div class="pick-rect rouge" id="pick-rouge"></div>
+      </div>
+    </div>
+    <script src="play.js"></script>
+  </body>
+</html>
