@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fin de partie</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="end.css">
+  </head>
+  <body>
+    <div class="end-container">
+      <h1>Partie terminée !</h1>
+      <div id="recap"></div>
+      <div class="end-actions">
+        <button id="discord-btn">Envoyer la draft sur Discord</button>
+        <button id="goto-discord">Aller sur le serveur Discord</button>
+        <button id="restart-btn">Relancer une partie</button>
+        <button id="home-btn">Retour à l'accueil</button>
+      </div>
+      <div id="end-msg" style="margin-top:10px;color:green;"></div>
+    </div>
+    <script>
+      // Récupère le code de la room
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      let gameData = null;
+      async function fetchRecap() {
+        const res = await fetch(`/api/room.php?code=${code}`);
+        gameData = await res.json();
+        let html = `<h2>Résumé de la draft</h2>`;
+        html += `<p><b>Map :</b> ${gameData.map || 'Inconnue'}</p>`;
+        html += `<p><b>Mode :</b> ${gameData.mode || 'Inconnu'}</p>`;
+        html += `<p><b>Joueurs :</b> ${(gameData.players || []).join(', ')}</p>`;
+        html += `<p><b>Bans bleu :</b> ${(gameData.bansBleu||[]).map(b=>b.name).join(', ')}</p>`;
+        html += `<p><b>Bans rouge :</b> ${(gameData.bansRouge||[]).map(b=>b.name).join(', ')}</p>`;
+        html += `<p><b>Picks bleu :</b> ${(gameData.picksBleu||[]).map(b=>b.name).join(', ')}</p>`;
+        html += `<p><b>Picks rouge :</b> ${(gameData.picksRouge||[]).map(b=>b.name).join(', ')}</p>`;
+        document.getElementById('recap').innerHTML = html;
+      }
+      fetchRecap();
+
+      // Envoi Discord via webhook
+      document.getElementById('discord-btn').onclick = async () => {
+        if (!gameData) return;
+        const webhookUrl = 'https://discord.com/api/webhooks/TON_WEBHOOK'; // À remplacer
+        const content = `**Draft terminée !**\nMap : ${gameData.map}\nMode : ${gameData.mode}\nJoueurs : ${(gameData.players||[]).join(', ')}\nBans bleu : ${(gameData.bansBleu||[]).map(b=>b.name).join(', ')}\nBans rouge : ${(gameData.bansRouge||[]).map(b=>b.name).join(', ')}\nPicks bleu : ${(gameData.picksBleu||[]).map(b=>b.name).join(', ')}\nPicks rouge : ${(gameData.picksRouge||[]).map(b=>b.name).join(', ')}`;
+        try {
+          await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content })
+          });
+          // Suppression du fichier JSON après envoi Discord
+          await fetch('/api/cleanup_game.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `code=${encodeURIComponent(code)}`
+          });
+          document.getElementById('end-msg').textContent = 'Draft envoyée sur Discord et supprimée du serveur !';
+        } catch {
+          document.getElementById('end-msg').textContent = 'Erreur lors de l\'envoi Discord.';
+        }
+      };
+      document.getElementById('goto-discord').onclick = () => {
+        window.open('https://discord.gg/TON_SERVEUR', '_blank'); // À remplacer
+      };
+      document.getElementById('restart-btn').onclick = async () => {
+        // Relance la partie avec le même code et supprime l'ancienne draft
+        await fetch('/api/cleanup_game.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `code=${encodeURIComponent(code)}`
+        });
+        window.location.href = `play.html?code=${code}`;
+      };
+      document.getElementById('home-btn').onclick = async () => {
+        // Retour à l'accueil et supprime la draft
+        await fetch('/api/cleanup_game.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `code=${encodeURIComponent(code)}`
+        });
+        window.location.href = 'index.html';
+      };
+    </script>
+  </body>
+</html>

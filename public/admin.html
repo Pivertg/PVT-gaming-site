@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Connexion</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <script>
+    // Supprime toute session précédente dès l'arrivée sur la page de connexion
+    sessionStorage.removeItem("adminToken");
+  </script>
+
+ 
+    <!-- Fond animé -->
+<div class="container"></div>
+  <header>
+        <div class="logo">PVT|Gaming</div>
+        <!-- Vous pouvez supprimer l'ancien menu si vous ne voulez utiliser que le nouveau -->
+   </header>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PVT|Gaming - Fil d'actualité</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Bouton pour ouvrir le menu (à droite) -->
+    <button class="menu-button">
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </button>
+
+    <!-- Overlay de fond -->
+    <div class="menu-overlay"></div>
+
+    <!-- Menu latéral (à droite) -->
+    <div class="side-menu">
+        <div class="side-menu-header">
+            <div class="side-menu-title">PVT|Gaming</div>
+            <div class="close-menu">&times;</div>
+        </div>
+        <div class="side-menu-content">
+            <ul>
+                <li><a href="index.html">🏠 Accueil</a></li>
+                <li><a href="reseau.html">📱 Reseau</a></li>
+                <li><a href="roster.html">📋 Rosters</a></li>
+                <li><a href="login-inscription.html">🖋️ Inscription des nouveaux joueurs</a></li>
+                <li><a href="admin.html">🔐 Connexion</a></li>
+        </div>
+            </ul>
+        </div>
+    </div>
+  <main class="login-container">
+    <div class="login-box">
+      <h1>🔑 Connexion Admin</h1>
+      <form id="admin-login-form">
+        <div class="input-group">
+          <label for="admin-pseudo">👤 Pseudo</label>
+          <input type="text" id="admin-pseudo" required>
+        </div>
+
+        <div class="input-group">
+          <label for="admin-password">🔒 Mot de passe</label>
+          <input type="password" id="admin-password" required>
+        </div>
+
+        <button type="submit" class="btn">🚀 Se connecter</button>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById("admin-login-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const pseudo = document.getElementById("admin-pseudo").value.trim();
+      const password = document.getElementById("admin-password").value.trim();
+
+      if (pseudo === "admin" && password === "MonSuperMotDePasse123") {
+        alert("✅ Connexion réussie !");
+        sessionStorage.setItem("adminToken", "adminLoggedIn");
+        setTimeout(() => {
+          window.location.href = "admin-dashboard.html";
+        }, 500);
+      } else {
+        alert("❌ Pseudo ou mot de passe incorrect !");
+      }
+    });
+  </script>
+
+  <script src="menu.js"></script>
+</body>
+</html>
